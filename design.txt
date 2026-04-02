@@ -1,0 +1,66 @@
+- Enums / Data Classes
+    - Coordinate (row: int, col: int)
+    - CellState (enum): UNKNOWN, MISS, HIT
+    - AttackResult (dataclass): hit: bool, sunk: bool, ship: Ship | None, already_guessed: bool
+
+- Ship  ← base class
+    * name: str
+    * size: int
+    * hits: int
+    * orientation: Orientation (enum: HORIZONTAL | VERTICAL)
+    * origin: Coordinate  ← top-left anchor point
+    % take_hit() -> None
+    % is_sunk() -> bool
+    % occupies(coord) -> bool   ← useful for placement logic
+    - Carrier(Ship)       size=5
+    - Battleship(Ship)    size=4
+    - Destroyer(Ship)     size=3
+    - Submarine(Ship)     size=3
+    - PatrolBoat(Ship)    size=2   ← standard Battleship includes this
+
+- Board
+    * GRID_SIZE: int = 10
+    * ship_grid: List[List[Ship | None]]
+    * guess_grid: List[List[CellState]]
+    * ships: List[Ship]
+    % place_ship(ship, origin, orientation) -> bool   ← False if invalid placement
+    % receive_attack(coord: Coordinate) -> AttackResult
+    % all_ships_sunk() -> bool
+    % is_valid_placement(ship, origin, orientation) -> bool
+
+- Player  ← abstract base class
+    * name: str
+    * board: Board
+    % place_ships() -> None   ← abstract
+    % take_turn(opponent_board: Board) -> AttackResult   ← abstract
+
+    - HumanPlayer(Player)
+        % place_ships()   ← prompts for input
+        % take_turn()     ← prompts for coordinate guess
+
+    - ComputerPlayer(Player)
+        * difficulty: Difficulty (enum: EASY | MEDIUM | HARD)
+        * last_hit: Coordinate | None
+        * hit_stack: List[Coordinate]   ← for medium: coords to try after a hit
+        % place_ships()   ← random placement
+        % take_turn()     ← dispatches to strategy
+        % _easy_guess()
+        % _medium_guess()
+        % _hard_guess()
+
+- GameManager
+    * player1: Player
+    * player2: Player
+    * current_turn: Player
+    * game_over: bool
+    % setup_game() -> None
+    % play_turn() -> AttackResult
+    % switch_turns() -> None
+    % check_win() -> Player | None
+    % run() -> None   ← main game loop
+
+- Displayer
+    % display_board(board: Board, hide_ships: bool) -> None
+    % display_both_boards(player: Player) -> None   ← your ships + enemy guess grid
+    % display_attack_result(result: AttackResult) -> None
+    % display_winner(player: Player) -> None
