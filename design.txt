@@ -19,6 +19,8 @@
     - PatrolBoat(Ship)    size=2   ← standard Battleship includes this
 
 - Board
+    """ Each player has a board representing their own ships and what 
+    they know about their opponent's ships """
     * GRID_SIZE: int = 10
     * ship_grid: List[List[Ship | None]]
     * guess_grid: List[List[CellState]]
@@ -49,6 +51,8 @@
         % _hard_guess()
 
 - GameManager
+    """ A GameManager has two player objects, each of which has a board object
+    which are logical opposites of one another """
     * player1: Player
     * player2: Player
     * current_turn: Player
