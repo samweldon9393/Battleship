@@ -16,7 +16,7 @@ class GameManager(object):
         self.displayer  = displayer
 
     def start(self):
-        self.displayer._draw_board("YOUR BOARD")
+        self.displayer._draw_boards_side_by_side()
         self.p1.place_ships()
         self.p2.place_ships()
         self.displayer._draw_ships()
@@ -37,10 +37,13 @@ class GameManager(object):
     def turn(self, player: Player, opp: Player) -> tuple[bool, str]:
         """
         Player makes a move, opp receives a hit
-        Returns True if game over, else False
+        Returns output to print and True if game over, else False
+            Output is returned instead of printed to allow displaying board
+            before output
         """
         move        = player.take_turn()
         attk_rslt   = opp.take_hit(move)
+        player.turn_result(move, attk_rslt)
         output      = ""
         if attk_rslt.hit:
             if attk_rslt.sunk:
@@ -56,10 +59,22 @@ class GameManager(object):
         return (False, output)
 
 def main():
-    computerAI  = ComputerAI(Difficulty.EASY)
+    difficulty_str  = input("Select a difficulty level: E | M | H (coming soon): ")
+    difficulty      = -1
+    while True:
+        match difficulty_str:
+            case "E":
+                difficulty = Difficulty.EASY
+                break
+            case "M":
+                difficulty = Difficulty.MEDIUM
+                break
+            case _:
+                difficulty_str = input("Must enter E | M: ")
     name        = input("Enter your name: ")
     human       = HumanPlayer(name=name)
-    displayer   = Displayer(computerAI.board, human.ships)
+    computerAI  = ComputerAI(difficulty)
+    displayer   = Displayer(computerAI.board, human.board, human.ships)
     gameManager = GameManager(human, computerAI, displayer)
 
     gameManager.start()

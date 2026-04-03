@@ -24,6 +24,10 @@ class Difficulty(Enum):
     MEDIUM  = 1
     HARD    = 2
 
+class Modes(Enum):
+    HUNT    = 0
+    TARGET  = 1
+
 ShipTypes = [
         "Carrier",
         "Battleship",

@@ -1,13 +1,23 @@
 from Displayer import Displayer
 from Player import Player
-from Ship import Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
-from util import CellState, Coordinate, Difficulty, Orientation
+from Ship import AttackResult, Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
+from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, Modes
 import random
 
+"""
+ComputerAI: A class that contains the logic to play Battleship on 
+    various difficulty levels:
+        EASY    - Completely random guessing
+        Medium  - Random guessing until hit, then search nearby
+
+Strategy Source: http://www.datagenetics.com/blog/december32011/
+"""
 class ComputerAI(Player):
     def __init__(self, difficulty: Difficulty, name: str = "Hal"):
         super().__init__(name=name)
         self.difficulty = difficulty
+        self.mode       = Modes.HUNT
+        self.targets    = list()
 
     def place_ships(self):
         self.ships.append(self._place_ship(Carrier()))
@@ -33,6 +43,22 @@ class ComputerAI(Player):
             case Difficulty.HARD:
                 return self._hard_guess()
 
+    def turn_result(self, move: Coordinate, rslt: AttackResult):
+        if not rslt.hit:
+            return
+        if rslt.sunk:
+            self.targets.clear()
+            return
+        else: # move was a hit, and the ship isn't sunk yet
+            if move.col < BOARD_SIZE - 1:
+                self.targets.append(Coordinate(move.col + 1, move.row))
+            if move.col > 0:
+                self.targets.append(Coordinate(move.col - 1, move.row))
+            if move.row < BOARD_SIZE - 1:
+                self.targets.append(Coordinate(move.col, move.row + 1))
+            if move.row > 0:
+                self.targets.append(Coordinate(move.col, move.row + 1))
+
     def _easy_guess(self) -> Coordinate:
         row = random.choice([i for i in range(10)])
         col = random.choice([i for i in range(10)])
@@ -40,3 +66,10 @@ class ComputerAI(Player):
             row = random.choice([i for i in range(10)])
             col = random.choice([i for i in range(10)])
         return Coordinate(row, col)
+
+    def _med_guess(self) -> Coordinate:
+        print("here")
+        if self.mode == Modes.HUNT:
+            return self._easy_guess()
+        else:
+            return self.targets.pop()

@@ -19,6 +19,10 @@ class Player(object):
     def take_turn(self) -> Coordinate:
         pass
 
+    @abstractmethod
+    def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
+        pass
+
     def take_hit(self, coor: Coordinate) -> AttackResult:
         for ship in self.ships:
             if coor in ship.occupied:

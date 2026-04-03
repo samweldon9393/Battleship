@@ -1,6 +1,6 @@
 from Displayer import Displayer
 from Player import Player
-from Ship import Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
+from Ship import AttackResult, Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
 from util import Coordinate, Orientation, ShipTypes
 
 class HumanPlayer(Player):
@@ -50,3 +50,5 @@ class HumanPlayer(Player):
             break
         return coor
 
+    def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
+        pass

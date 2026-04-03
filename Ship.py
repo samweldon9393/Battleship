@@ -69,6 +69,6 @@ class PatrolBoat(Ship):
         super().__init__("Patrol Boat", 2)
 @dataclass
 class AttackResult:
-    hit: bool
+    hit:  bool
     sunk: bool
     ship: Ship
