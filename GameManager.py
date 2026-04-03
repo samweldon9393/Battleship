@@ -1,15 +1,15 @@
 from Displayer import Displayer
+from Player import Player
 from ComputerAI import ComputerAI
 from HumanPlayer import HumanPlayer
 from util import Difficulty
 
 class GameManager(object):
     def __init__(self,
-                 computerAI: ComputerAI,
-                 human: HumanPlayer,
+                 p1: Player,
+                 p2: Player,
                  displayer: Displayer
                  ):
-        pass
 
 def main():
     computerAI  = ComputerAI(Difficulty.EASY)
