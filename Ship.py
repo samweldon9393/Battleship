@@ -54,19 +54,19 @@ class Carrier(Ship):
 
 class Battleship(Ship):
     def __init__(self):
-        super().__init__("Battleship", 5)
+        super().__init__("Battleship", 4)
 
 class Destroyer(Ship):
     def __init__(self):
-        super().__init__("Destroyer", 5)
+        super().__init__("Destroyer", 3)
 
 class Submarine(Ship):
     def __init__(self):
-        super().__init__("Submarine", 5)
+        super().__init__("Submarine", 3)
 
 class PatrolBoat(Ship):
     def __init__(self):
-        super().__init__("Patrol Boat", 5)
+        super().__init__("Patrol Boat", 2)
 @dataclass
 class AttackResult:
     hit: bool

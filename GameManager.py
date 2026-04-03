@@ -16,15 +16,16 @@ class GameManager(object):
         self.displayer  = displayer
 
     def start(self):
-        self.displayer.display("YOUR BOARD")
+        self.displayer._draw_board("YOUR BOARD")
         self.p1.place_ships()
         self.p2.place_ships()
+        self.displayer._draw_ships()
         while True:
-            self.displayer.display()
             if self.turn(self.p1, self.p2):
                 break
             if self.turn(self.p2, self.p1):
                 break
+            self.displayer.display()
 
     def turn(self, player: Player, opp: Player) -> bool:
         """
@@ -35,7 +36,7 @@ class GameManager(object):
         attk_rslt   = opp.take_hit(move)
         if attk_rslt.hit:
             if attk_rslt.sunk:
-                print(f"{player.name} sunk {opp}'s {attk_rslt.ship.name}")
+                print(f"{player.name} sunk {opp.name}'s {attk_rslt.ship.name}")
                 opp.ships_left -= 1
                 if opp.ships_left == 0:
                     print(f"{player.name} wins!")
@@ -50,7 +51,7 @@ def main():
     computerAI  = ComputerAI(Difficulty.EASY)
     name        = input("Enter your name: ")
     human       = HumanPlayer(name=name)
-    displayer   = Displayer(computerAI.board)
+    displayer   = Displayer(computerAI.board, human.ships)
     gameManager = GameManager(human, computerAI, displayer)
 
     gameManager.start()

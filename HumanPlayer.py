@@ -1,3 +1,4 @@
+from Displayer import Displayer
 from Player import Player
 from Ship import Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
 from util import Coordinate, Orientation, ShipTypes
@@ -16,21 +17,20 @@ class HumanPlayer(Player):
     def _place_ship(self, ship: Ship) -> Coordinate:
         while True:
             coor = None
-            inp = input(f"Place your {ship.name}. Enter [col, row] (no brackets): ")
+            inp = input(f"Place your {ship.name}. Enter [col row orientation(h/v)] (e.g.: A 1 v): ")
             try:
-                x, y = inp.split(',')
+                x, y, o = inp.split(' ')
                 coor = Coordinate(Coordinate.cols[x], int(y)-1)
             except Exception as e:
-                print(f"Move must be in the form [x, y] (no brackets) {e}")
+                print(f"Move must be in the form [x y o] (no brackets) {e}")
                 continue
             orient = -1
-            inp = input(f"Place your {ship.name} vertically (v) or horizontally (h)? ")
-            if inp == "v":
+            if o == "v":
                 orient = Orientation.VERTICAL
-            elif inp == "h":
+            elif o == "h":
                 orient = Orientation.HORIZONTAL
             else:
-                print("Must enter v or h only")
+                print("Must enter v or h for orientation")
                 continue
             if ship.place(self.ships, orient, coor):
                 break
