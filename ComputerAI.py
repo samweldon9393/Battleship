@@ -48,16 +48,26 @@ class ComputerAI(Player):
             return
         if rslt.sunk:
             self.targets.clear()
+            self.mode = Modes.HUNT
             return
         else: # move was a hit, and the ship isn't sunk yet
+            self.mode = Modes.TARGET
             if move.col < BOARD_SIZE - 1:
-                self.targets.append(Coordinate(move.col + 1, move.row))
+                coor = Coordinate(move.col + 1, move.row)
+                if coor not in self.targets and self.board.get_cell(coor) == CellState.UNKNOWN:
+                    self.targets.append(coor)
             if move.col > 0:
-                self.targets.append(Coordinate(move.col - 1, move.row))
+                coor = Coordinate(move.col - 1, move.row)
+                if coor not in self.targets and self.board.get_cell(coor) == CellState.UNKNOWN:
+                    self.targets.append(coor)
             if move.row < BOARD_SIZE - 1:
-                self.targets.append(Coordinate(move.col, move.row + 1))
+                coor = Coordinate(move.col, move.row + 1)
+                if coor not in self.targets and self.board.get_cell(coor) == CellState.UNKNOWN:
+                    self.targets.append(coor)
             if move.row > 0:
-                self.targets.append(Coordinate(move.col, move.row + 1))
+                coor = Coordinate(move.col, move.row - 1)
+                if coor not in self.targets and self.board.get_cell(coor) == CellState.UNKNOWN:
+                    self.targets.append(coor)
 
     def _easy_guess(self) -> Coordinate:
         row = random.choice([i for i in range(10)])
@@ -68,8 +78,8 @@ class ComputerAI(Player):
         return Coordinate(row, col)
 
     def _med_guess(self) -> Coordinate:
-        print("here")
         if self.mode == Modes.HUNT:
             return self._easy_guess()
         else:
-            return self.targets.pop()
+            print(f"self.targets: {self.targets}")
+            return self.targets.pop() if len(self.targets) > 0 else self._easy_guess()

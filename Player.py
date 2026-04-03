@@ -10,6 +10,7 @@ class Player(object):
         self.ships      = list()
         self.ships_left = 5
         self.name       = name
+        self.moves_made = set()
 
     @abstractmethod
     def place_ships(self) -> list[Ship]:
@@ -30,3 +31,9 @@ class Player(object):
                 return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
         self.board.update(coor, CellState.MISS)
         return AttackResult(hit=False, sunk=False, ship=None)
+
+    def save_move(self, move: Coordinate):
+        if move in self.moves_made:
+            return False
+        self.moves_made.add(move)
+        return True

@@ -3,7 +3,7 @@ from Player import Player
 from ComputerAI import ComputerAI
 from HumanPlayer import HumanPlayer
 from Ship import AttackResult
-from util import Difficulty
+from util import Coordinate, Difficulty
 
 class GameManager(object):
     def __init__(self,
@@ -42,9 +42,13 @@ class GameManager(object):
             before output
         """
         move        = player.take_turn()
+        while not player.save_move(move): # Don't allow the same move twice
+            if isinstance(player, HumanPlayer):
+                print("Cannot repeat moves")
+            move    = player.take_turn()
         attk_rslt   = opp.take_hit(move)
         player.turn_result(move, attk_rslt)
-        output      = ""
+        output      = f"{player.name} guessed [{Coordinate.inds[move.col]}, {move.row + 1}]. "
         if attk_rslt.hit:
             if attk_rslt.sunk:
                 output += f"{player.name} sunk {opp.name}'s {attk_rslt.ship.name}\n"
