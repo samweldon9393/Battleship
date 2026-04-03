@@ -20,5 +20,5 @@ class Displayer(object):
             print("")
         print("-" * 40)
 
-        print("PLAYER'S BOARD")
+        print("PLAYER'S SHIPS")
         print("coming soon")

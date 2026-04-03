@@ -15,6 +15,7 @@ class GameManager(object):
         self.displayer = displayer
 
     def start(self):
+        self.p1.place_ships()
         while True:
             self.displayer.display()
             self.p1.take_turn()
@@ -24,7 +25,7 @@ def main():
     computerAI  = ComputerAI(Difficulty.EASY)
     human       = HumanPlayer()
     displayer   = Displayer(human.board)
-    gameManager = GameManager(computerAI, human, displayer)
+    gameManager = GameManager(human, computerAI, displayer)
 
     gameManager.start()
 

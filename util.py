@@ -1,6 +1,8 @@
 from enum import Enum
 from dataclasses import dataclass
 
+BOARD_SIZE = 10
+
 @dataclass
 class Coordinate:
     row: int
@@ -19,3 +21,11 @@ class Difficulty(Enum):
     EASY    = 0
     MEDIUM  = 1
     HARD    = 2
+
+ShipTypes = [
+        "Carrier",
+        "Battleship",
+        "Destroyer",
+        "Submarine",
+        "Patrol Boat"
+        ]

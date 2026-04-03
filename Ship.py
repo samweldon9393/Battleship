@@ -1,35 +1,41 @@
-from util import Orientation, Coordinate
+from util import BOARD_SIZE, Orientation, Coordinate
 from dataclasses import dataclass
 
 class Ship(object):
-    def __init__(name: str,
-                 size: int,
-                 orientation: Orientation,
-                 origin: Coordinate):
+    def __init__(self, name: str, size: int):
         self.name = name
         self.size = size
         self.hits = 0
-        self.occupied = self._get_occupied(size, orientation, origin)
+        self.occupied = None
 
-    # TODO
-    @classmethod
-    def can_occupy(cls, size: int,
-                      orientation: Orientation,
-                      origin: Coordinate) -> list[Coordinate]:
-        pass
+    def _can_occupy(self, ships: list) -> bool:
+        for ship in ships:
+            for coor in ship.occupied:
+                if self.occupies(coor):
+                    return False
+        return True
+
     
-    def _get_occupied(self, size: int,
-                      orientation: Orientation,
-                      origin: Coordinate) -> list[Coordinate]:
-        spaces = [None] * size
+    # TODO do something more efficient
+    def place(self, ships: list,
+                    orientation: Orientation,
+                    origin: Coordinate) -> bool:
+        """
+        Returns true if placement is ok, sets self.occupied to a list of 
+        all occupied Coordinates
+        """
+        spaces = [None] * self.size
         cur = Coordinate(origin.row, origin.col)
-        for i in range(size):
+        for i in range(self.size):
+            if cur.row >= BOARD_SIZE or cur.col >= BOARD_SIZE:
+                return False
             spaces[i] = Coordinate(cur.row, cur.col)
-            if orientation == HORIZONTAL:
+            if orientation == Orientation.HORIZONTAL:
                 cur.row += 1
             else:
                 cur.col += 1
-        return spaces
+        self.occupied = spaces
+        return self._can_occupy(ships)
 
     def occupies(self, coor: Coordinate) -> bool:
         return coor in self.occupied
@@ -43,29 +49,24 @@ class Ship(object):
 
 
 class Carrier(Ship):
-    def __init__(orientation: Orientation,
-                 origin: Coordinate):
-        super().__init__("Carrier", 5, orientation, origin)
+    def __init__(self):
+        super().__init__("Carrier", 5)
 
 class Battleship(Ship):
-    def __init__(orientation: Orientation,
-                 origin: Coordinate):
-        super().__init__("Battleship", 4, orientation, origin)
+    def __init__(self):
+        super().__init__("Battleship", 5)
 
 class Destroyer(Ship):
-    def __init__(orientation: Orientation,
-                 origin: Coordinate):
-        super().__init__("Destroyer", 3, orientation, origin)
+    def __init__(self):
+        super().__init__("Destroyer", 5)
 
 class Submarine(Ship):
-    def __init__(orientation: Orientation,
-                 origin: Coordinate):
-        super().__init__("Submarine", 3, orientation, origin)
+    def __init__(self):
+        super().__init__("Submarine", 5)
 
 class PatrolBoat(Ship):
-    def __init__(orientation: Orientation,
-                 origin: Coordinate):
-        super().__init__("Patrol Boat", 2, orientation, origin)
+    def __init__(self):
+        super().__init__("Patrol Boat", 5)
 
 @dataclass
 class AttackResult:
