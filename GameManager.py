@@ -15,6 +15,7 @@ class GameManager(object):
         self.displayer = displayer
 
     def start(self):
+        self.p2.place_ships()
         self.p1.place_ships()
         while True:
             self.displayer.display()

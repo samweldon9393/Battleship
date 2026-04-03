@@ -8,8 +8,19 @@ class ComputerAI(Player):
         self.difficulty = difficulty
 
     def place_ships(self):
-        # TODO
-        pass
+        self.ships.append(self._place_ship(Carrier()))
+        self.ships.append(self._place_ship(Battleship()))
+        self.ships.append(self._place_ship(Destroyer()))
+        self.ships.append(self._place_ship(Submarine()))
+        self.ships.append(self._place_ship(PatrolBoat()))
+
+    def _place_ship(self, ship: Ship) -> Coordinate:
+        while True:
+            coor = Coordinate(random.randint(0, 9), random.randint(0, 9))
+            orient = random.choice([Orientation.VERTICAL, Orientation.HORIZONTAL])
+            if ship.place(self.ships, orient, coor):
+                break
+        return ship
 
     def take_turn(self) -> Coordinate:
         match self.difficulty:
