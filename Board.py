@@ -1,4 +1,4 @@
-import util
+from util import CellState
 from Ship import Ship
 
 BOARD_SIZE = 10
@@ -10,8 +10,8 @@ class Board(object):
     grid representing its opponent's ships
     """
     def __init__(self):
-        player_ship_grid   = None
-        opp_cell_grid      = self._init_cell_grid()
+        ship_grid:   list[list[Ship | None]] = None
+        cell_grid:   list[list[CellState]]   = self._init_cell_grid()
 
     def _init_cell_grid(self):
-        return [[UNKNOWN] * BOARD_SIZE] * BOARD_SIZE
+        return [[CellState.UNKNOWN] * BOARD_SIZE] * BOARD_SIZE

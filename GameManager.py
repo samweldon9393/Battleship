@@ -1,7 +1,7 @@
 from Displayer import Displayer
 from ComputerAI import ComputerAI
 from HumanPlayer import HumanPlayer
-import util
+from util import Difficulty
 
 class GameManager(object):
     def __init__(self,
@@ -12,7 +12,7 @@ class GameManager(object):
         pass
 
 def main():
-    computerAI  = ComputerAI()
+    computerAI  = ComputerAI(Difficulty.EASY)
     human       = HumanPlayer()
     displayer   = Displayer()
     gameManager = GameManager(computerAI, human, displayer)

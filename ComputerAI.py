@@ -1,5 +1,5 @@
 from Player import Player
-import util
+from util import Coordinate, Difficulty
 import random
 
 class ComputerAI(Player):
@@ -11,13 +11,19 @@ class ComputerAI(Player):
         # TODO
         pass
 
-    def take_turn(self):
+    def take_turn(self) -> Coordinate:
         match self.difficulty:
-            case EASY:
+            case Difficulty.EASY:
                 self._easy_guess()
-            case MEDIUM:
+            case Difficulty.MEDIUM:
                 self._med_guess()
-            case HARD:
+            case Difficulty.HARD:
                 self._hard_guess()
 
-    def _easy_guess(self):
+    def _easy_guess(self) -> Coordinate:
+        row = random.choice([i for i in range(10)])
+        col = random.choice([i for i in range(10)])
+        while self.board.cell_grid[row][col] != UNKNOWN:
+            row = random.choice([i for i in range(10)])
+            col = random.choice([i for i in range(10)])
+        return Coordinate(row, col)

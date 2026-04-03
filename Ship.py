@@ -1,10 +1,5 @@
-from util import Orientation
-
-@dataclass
-class AttackResult:
-    hit: bool
-    sunk: bool
-    ship: Ship | None
+from util import Orientation, Coordinate
+from dataclasses import dataclass
 
 class Ship(object):
     def __init__(name: str,
@@ -20,12 +15,12 @@ class Ship(object):
     @classmethod
     def can_occupy(cls, size: int,
                       orientation: Orientation,
-                      origin: Coordinate) -> List[Coordinate]:
+                      origin: Coordinate) -> list[Coordinate]:
         pass
     
     def _get_occupied(self, size: int,
                       orientation: Orientation,
-                      origin: Coordinate) -> List[Coordinate]:
+                      origin: Coordinate) -> list[Coordinate]:
         spaces = [None] * size
         cur = Coordinate(origin.row, origin.col)
         for i in range(size):
@@ -71,3 +66,9 @@ class PatrolBoat(Ship):
     def __init__(orientation: Orientation,
                  origin: Coordinate):
         super().__init__("Patrol Boat", 2, orientation, origin)
+
+@dataclass
+class AttackResult:
+    hit: bool
+    sunk: bool
+    ship: Ship | None
