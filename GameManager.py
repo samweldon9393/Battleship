@@ -21,31 +21,39 @@ class GameManager(object):
         self.p2.place_ships()
         self.displayer._draw_ships()
         while True:
-            if self.turn(self.p1, self.p2):
+            turn_result = self.turn(self.p1, self.p2)
+            output = turn_result[1]
+            if turn_result[0]:
+                print(output)
                 break
-            if self.turn(self.p2, self.p1):
+            turn_result = self.turn(self.p2, self.p1)
+            output += turn_result[1]
+            if turn_result[0]:
+                print(output)
                 break
             self.displayer.display()
+            print(output)
 
-    def turn(self, player: Player, opp: Player) -> bool:
+    def turn(self, player: Player, opp: Player) -> tuple[bool, str]:
         """
         Player makes a move, opp receives a hit
         Returns True if game over, else False
         """
         move        = player.take_turn()
         attk_rslt   = opp.take_hit(move)
+        output      = ""
         if attk_rslt.hit:
             if attk_rslt.sunk:
-                print(f"{player.name} sunk {opp.name}'s {attk_rslt.ship.name}")
+                output += f"{player.name} sunk {opp.name}'s {attk_rslt.ship.name}\n"
                 opp.ships_left -= 1
                 if opp.ships_left == 0:
-                    print(f"{player.name} wins!")
-                    return True
+                    output += f"{player.name} wins!\n"
+                    return (True, output)
             else:
-                print(f"{player.name} hit {opp.name}'s {attk_rslt.ship.name}")
+                output += f"{player.name} hit {opp.name}'s {attk_rslt.ship.name}\n"
         else:
-            print(f"{player.name} miss")
-        return False
+            output += f"{player.name} miss\n"
+        return (False, output)
 
 def main():
     computerAI  = ComputerAI(Difficulty.EASY)

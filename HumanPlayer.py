@@ -40,12 +40,12 @@ class HumanPlayer(Player):
 
     def take_turn(self) -> Coordinate:
         while True:
-            move = input("Your move, enter [x, y] (no brackets): ")
+            move = input("Your move, enter [x y] (no brackets): ")
             try:
-                x, y = move.split(',')
+                x, y = move.split(' ')
                 coor = Coordinate(Coordinate.cols[x], int(y)-1)
             except Exception as e:
-                print(f"Move must be in the form [x, y] (no brackets) {e}")
+                print(f"Move must be in the form [x y] (no brackets) {e}")
                 continue
             break
         return coor

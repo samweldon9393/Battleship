@@ -4,7 +4,7 @@ from util import BOARD_SIZE, CellState, Coordinate
 
 class Displayer(object):
     def __init__(self, board: Board, ships: list[Ship]):
-        self.board = board  # opponent's guess grid
+        self.board = board  # player's guess grid (opponent's board)
         self.ships = ships # player's ship list 
 
     def display(self, label="OPPONENT's BOARD"):
@@ -17,7 +17,7 @@ class Displayer(object):
         # Build each ship's display block as a list of lines
         blocks = []
         for ship in self.ships:
-            name_line = f"{ship.name} [{Coordinate.inds[ship.occupied[0].col]}, {ship.occupied[0].row + 1}]"
+            name_line = f"{ship.name}"# [{Coordinate.inds[ship.occupied[0].col]}, {ship.occupied[0].row + 1}]"
             cells = ""
             for i in range(ship.size):
                 cells += "X" if i < ship.hits else "█"
