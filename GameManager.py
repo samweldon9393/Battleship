@@ -16,13 +16,17 @@ class GameManager(object):
 
     def start(self):
         while True:
-            p
+            self.displayer.display()
+            self.p1.take_turn()
+            self.p2.take_turn()
 
 def main():
     computerAI  = ComputerAI(Difficulty.EASY)
     human       = HumanPlayer()
-    displayer   = Displayer()
+    displayer   = Displayer(human.board)
     gameManager = GameManager(computerAI, human, displayer)
+
+    gameManager.start()
 
 
 if __name__ == '__main__':

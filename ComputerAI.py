@@ -1,5 +1,5 @@
 from Player import Player
-from util import Coordinate, Difficulty
+from util import CellState, Coordinate, Difficulty
 import random
 
 class ComputerAI(Player):
@@ -23,7 +23,7 @@ class ComputerAI(Player):
     def _easy_guess(self) -> Coordinate:
         row = random.choice([i for i in range(10)])
         col = random.choice([i for i in range(10)])
-        while self.board.cell_grid[row][col] != UNKNOWN:
+        while self.board.cell_grid[row][col] != CellState.UNKNOWN:
             row = random.choice([i for i in range(10)])
             col = random.choice([i for i in range(10)])
         return Coordinate(row, col)

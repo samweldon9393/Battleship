@@ -1,5 +1,6 @@
 from Board import Board
 from abc import abstractmethod
+from util import Coordinate
 
 class Player(object):
     def __init__(self):
@@ -10,5 +11,5 @@ class Player(object):
         pass
 
     @abstractmethod
-    def take_turn(self):
+    def take_turn(self) -> Coordinate:
         pass
