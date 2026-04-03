@@ -4,9 +4,11 @@ from util import Coordinate
 from Ship import Ship
 
 class Player(object):
-    def __init__(self):
-        self.board = Board()
-        self.ships = list()
+    def __init__(self, name: str = "Player"):
+        self.board      = Board()
+        self.ships      = list()
+        self.ships_left = 5
+        self.name       = name
 
     @abstractmethod
     def place_ships(self) -> list[Ship]:
@@ -15,3 +17,9 @@ class Player(object):
     @abstractmethod
     def take_turn(self) -> Coordinate:
         pass
+
+    def take_hit(self, coor: Coordinate) -> Ship:
+        for ship in self.ships:
+            if coor in ship.occupied:
+                return ship
+        return None

@@ -6,7 +6,7 @@ class Ship(object):
         self.name = name
         self.size = size
         self.hits = 0
-        self.occupied = None
+        self.occupied: list[Coordinate] = None
 
     def _can_occupy(self, ships: list) -> bool:
         for ship in ships:
@@ -31,16 +31,16 @@ class Ship(object):
                 return False
             spaces[i] = Coordinate(cur.row, cur.col)
             if orientation == Orientation.HORIZONTAL:
-                cur.row += 1
-            else:
                 cur.col += 1
+            else:
+                cur.row += 1
         self.occupied = spaces
         return self._can_occupy(ships)
 
     def occupies(self, coor: Coordinate) -> bool:
         return coor in self.occupied
 
-    def take_hit(self) -> bool:
+    def is_sunk(self) -> bool:
         self.hits += 1
         if self.hits == self.size:
             self.sunk = True

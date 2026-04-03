@@ -3,8 +3,8 @@ from Ship import Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
 from util import Coordinate, Orientation, ShipTypes
 
 class HumanPlayer(Player):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name: str = "Human"):
+        super().__init__(name=name)
 
     def place_ships(self) -> bool:
         self.ships.append(self._place_ship(Carrier()))

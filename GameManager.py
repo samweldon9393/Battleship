@@ -19,12 +19,35 @@ class GameManager(object):
         self.p1.place_ships()
         while True:
             self.displayer.display()
-            self.p1.take_turn()
-            self.p2.take_turn()
+            if self.turn(self.p1, self.p2):
+                break
+            if self.turn(self.p2, self.p1):
+                break
+
+    def turn(self, player: Player, opp: Player) -> bool:
+        """
+        Player makes a move, opp receives a hit
+        Returns True if game over, else False
+        """
+        move        = player.take_turn()
+        hit_ship    = opp.take_hit(move)
+        if hit_ship:
+            if hit_ship.is_sunk():
+                print(f"{player.name} sunk Player 2's {hit_ship.name}")
+                p2.ships_left -= 1
+                if p2.ships_left == 0:
+                    print(f"{player.name} wins!")
+                    return True
+            else:
+                print(f"{player.name} hit {opp.name}'s {hit_ship.name}")
+        else:
+            print(f"{player.name} miss")
+        return False
 
 def main():
     computerAI  = ComputerAI(Difficulty.EASY)
-    human       = HumanPlayer()
+    name        = input("Enter your name: ")
+    human       = HumanPlayer(name=name)
     displayer   = Displayer(human.board)
     gameManager = GameManager(human, computerAI, displayer)
 

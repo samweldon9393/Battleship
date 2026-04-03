@@ -4,8 +4,8 @@ from util import CellState, Coordinate, Difficulty, Orientation
 import random
 
 class ComputerAI(Player):
-    def __init__(self, difficulty: Difficulty):
-        super().__init__()
+    def __init__(self, difficulty: Difficulty, name: str = "Hal"):
+        super().__init__(name=name)
         self.difficulty = difficulty
 
     def place_ships(self):
