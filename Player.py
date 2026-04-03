@@ -1,7 +1,7 @@
 from Board import Board
 from abc import abstractmethod
 from util import Coordinate
-from Ship import Ship
+from Ship import AttackResult, Ship
 
 class Player(object):
     def __init__(self, name: str = "Player"):
@@ -21,5 +21,5 @@ class Player(object):
     def take_hit(self, coor: Coordinate) -> Ship:
         for ship in self.ships:
             if coor in ship.occupied:
-                return ship
-        return None
+                return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
+        return AttackResult(hit=False, sunk=False, ship=None)

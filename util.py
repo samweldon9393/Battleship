@@ -4,6 +4,12 @@ from dataclasses import dataclass
 BOARD_SIZE = 10
 
 @dataclass
+class AttackResult:
+    hit: bool
+    sunk: bool
+    ship = None # Ship type
+
+@dataclass
 class Coordinate:
     row: int
     col: int

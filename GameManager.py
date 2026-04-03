@@ -2,6 +2,7 @@ from Displayer import Displayer
 from Player import Player
 from ComputerAI import ComputerAI
 from HumanPlayer import HumanPlayer
+from Ship import AttackResult
 from util import Difficulty
 
 class GameManager(object):
@@ -30,16 +31,16 @@ class GameManager(object):
         Returns True if game over, else False
         """
         move        = player.take_turn()
-        hit_ship    = opp.take_hit(move)
-        if hit_ship:
-            if hit_ship.is_sunk():
-                print(f"{player.name} sunk Player 2's {hit_ship.name}")
+        attk_rslt   = opp.take_hit(move)
+        if attk_rslt.hit:
+            if attk_rslt.sunk:
+                print(f"{player.name} sunk Player 2's {attk_rslt.ship.name}")
                 p2.ships_left -= 1
                 if p2.ships_left == 0:
                     print(f"{player.name} wins!")
                     return True
             else:
-                print(f"{player.name} hit {opp.name}'s {hit_ship.name}")
+                print(f"{player.name} hit {opp.name}'s {attk_rslt.ship.name}")
         else:
             print(f"{player.name} miss")
         return False

@@ -67,9 +67,10 @@ class Submarine(Ship):
 class PatrolBoat(Ship):
     def __init__(self):
         super().__init__("Patrol Boat", 5)
-
 @dataclass
 class AttackResult:
     hit: bool
     sunk: bool
-    ship: Ship | None
+    ship: Ship
+
+
