@@ -1,6 +1,6 @@
 from Displayer import Displayer
 from Player import Player
-from ComputerAI import ComputerAI
+from ComputerPlayer import ComputerPlayer
 from HumanPlayer import HumanPlayer
 from Ship import AttackResult
 from util import Coordinate, Difficulty
@@ -75,11 +75,11 @@ def main():
                 break
             case _:
                 difficulty_str = input("Must enter E | M: ")
-    name        = input("Enter your name: ")
-    human       = HumanPlayer(name=name)
-    computerAI  = ComputerAI(difficulty)
-    displayer   = Displayer(computerAI.board, human.board, human.ships)
-    gameManager = GameManager(human, computerAI, displayer)
+    name            = input("Enter your name: ")
+    human           = HumanPlayer(name=name)
+    ComputerPlayer  = ComputerPlayer(difficulty)
+    displayer       = Displayer(ComputerPlayer.board, human.board, human.ships)
+    gameManager     = GameManager(human, ComputerPlayer, displayer)
 
     gameManager.start()
 
