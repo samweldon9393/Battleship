@@ -25,11 +25,11 @@ class Ship(object):
         all occupied Coordinates
         """
         spaces = [None] * self.size
-        cur = Coordinate(origin.row, origin.col)
+        cur = Coordinate(origin.col, origin.row)
         for i in range(self.size):
             if cur.row >= BOARD_SIZE or cur.col >= BOARD_SIZE:
                 return False
-            spaces[i] = Coordinate(cur.row, cur.col)
+            spaces[i] = Coordinate(cur.col, cur.row)
             if orientation == Orientation.HORIZONTAL:
                 cur.col += 1
             else:

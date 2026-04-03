@@ -11,7 +11,6 @@ class Board(object):
         self.cell_grid:   list[list[CellState]]   = self._init_cell_grid()
 
     def _init_cell_grid(self):
-        [["x"] * 10 for _ in range(10)]
         return [[CellState.UNKNOWN] * BOARD_SIZE for _ in range(BOARD_SIZE)]
 
     def get_cell(self, coor: Coordinate):

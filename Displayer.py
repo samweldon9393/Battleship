@@ -5,8 +5,8 @@ class Displayer(object):
     def __init__(self, board: Board):
         self.board = board  # opponent's guess grid
 
-    def display(self):
-        self._draw_board(self.board, label="OPPONENT'S BOARD")
+    def display(self, label="OPPONENT's BOARD"):
+        self._draw_board(self.board, label=label)
 
     def _draw_board(self, board: Board, label: str):
         print(f"\n  {label}\n")

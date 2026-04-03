@@ -16,10 +16,10 @@ class HumanPlayer(Player):
     def _place_ship(self, ship: Ship) -> Coordinate:
         while True:
             coor = None
-            inp = input(f"Place your {ship.name}. Enter [x, y] (no brackets): ")
+            inp = input(f"Place your {ship.name}. Enter [col, row] (no brackets): ")
             try:
                 x, y = inp.split(',')
-                coor = Coordinate(int(x), int(y))
+                coor = Coordinate(Coordinate.cols[x], int(y)-1)
             except Exception as e:
                 print(f"Move must be in the form [x, y] (no brackets) {e}")
                 continue
@@ -43,7 +43,7 @@ class HumanPlayer(Player):
             move = input("Your move, enter [x, y] (no brackets): ")
             try:
                 x, y = move.split(',')
-                coor = Coordinate(int(x), int(y))
+                coor = Coordinate(Coordinate.cols[x], int(y)-1)
             except Exception as e:
                 print(f"Move must be in the form [x, y] (no brackets) {e}")
                 continue

@@ -5,8 +5,9 @@ BOARD_SIZE = 10
 
 @dataclass
 class Coordinate:
-    row: int
     col: int
+    row: int
+    cols = { "A":0, "B":1, "C":2, "D":3, "E":4, "F":5, "G":6, "H":7, "I":8, "J":9 }
 
 class CellState(Enum):
     UNKNOWN = 0
