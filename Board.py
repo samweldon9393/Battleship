@@ -1,7 +1,5 @@
-from util import CellState
+from util import BOARD_SIZE, CellState, Coordinate
 from Ship import Ship
-
-BOARD_SIZE = 10
 
 class Board(object):
     """
@@ -14,3 +12,9 @@ class Board(object):
 
     def _init_cell_grid(self):
         return [[CellState.UNKNOWN] * BOARD_SIZE] * BOARD_SIZE
+
+    def get_cell(self, coor: Coordinate):
+        return self.cell_grid[coor.row][coor.col]
+
+    def update(self, coor: Coordinate, state: CellState):
+        self.cell_grid[coor.row][coor.col] = state

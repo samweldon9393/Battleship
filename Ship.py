@@ -72,5 +72,3 @@ class AttackResult:
     hit: bool
     sunk: bool
     ship: Ship
-
-

@@ -11,9 +11,9 @@ class GameManager(object):
                  p2: Player,
                  displayer: Displayer
                  ):
-        self.p1 = p1
-        self.p2 = p2
-        self.displayer = displayer
+        self.p1         = p1
+        self.p2         = p2
+        self.displayer  = displayer
 
     def start(self):
         self.p2.place_ships()
@@ -34,9 +34,9 @@ class GameManager(object):
         attk_rslt   = opp.take_hit(move)
         if attk_rslt.hit:
             if attk_rslt.sunk:
-                print(f"{player.name} sunk Player 2's {attk_rslt.ship.name}")
-                p2.ships_left -= 1
-                if p2.ships_left == 0:
+                print(f"{player.name} sunk {opp}'s {attk_rslt.ship.name}")
+                opp.ships_left -= 1
+                if opp.ships_left == 0:
                     print(f"{player.name} wins!")
                     return True
             else:
