@@ -10,6 +10,13 @@ class GameManager(object):
                  p2: Player,
                  displayer: Displayer
                  ):
+        self.p1 = p1
+        self.p2 = p2
+        self.displayer = displayer
+
+    def start(self):
+        while True:
+            p
 
 def main():
     computerAI  = ComputerAI(Difficulty.EASY)

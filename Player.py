@@ -1,6 +1,5 @@
 from Board import Board
 from abc import abstractmethod
-from util import Difficulty
 
 class Player(object):
     def __init__(self):
