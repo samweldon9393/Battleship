@@ -1,5 +1,6 @@
 from Player import Player
-from util import CellState, Coordinate, Difficulty
+from Ship import Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
+from util import CellState, Coordinate, Difficulty, Orientation
 import random
 
 class ComputerAI(Player):
