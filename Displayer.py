@@ -44,7 +44,7 @@ class Displayer(object):
         right_label = "OPPONENT'S BOARD".center(len(col_headers))
         print(f"\n  {left_label}{GAP}  {right_label}\n")
 
-        print(col_headers + GAP + col_headers)
+        print(col_headers + GAP + " " + col_headers)
         print(h_line_top  + GAP + h_line_top)
 
         left_rows  = board_rows(self.player_board)

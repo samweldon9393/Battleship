@@ -1,7 +1,8 @@
 from enum import Enum
 from dataclasses import dataclass
 
-BOARD_SIZE = 10
+TOTAL_SHIPS = 5
+BOARD_SIZE  = 10
 
 @dataclass
 class Coordinate:

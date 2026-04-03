@@ -72,3 +72,5 @@ class AttackResult:
     hit:  bool
     sunk: bool
     ship: Ship
+    def __hash__(self):
+        return hash(ship.name)

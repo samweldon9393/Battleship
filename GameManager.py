@@ -1,9 +1,14 @@
+#!/bin/env python3
+
 from Displayer import Displayer
 from Player import Player
 from ComputerPlayer import ComputerPlayer
 from HumanPlayer import HumanPlayer
 from Ship import AttackResult
 from util import Coordinate, Difficulty
+
+# TODO remove
+import time
 
 class GameManager(object):
     def __init__(self,
@@ -41,7 +46,7 @@ class GameManager(object):
             Output is returned instead of printed to allow displaying board
             before output
         """
-        move        = player.take_turn()
+        move = player.take_turn()
         while not player.save_move(move): # Don't allow the same move twice
             if isinstance(player, HumanPlayer):
                 print("Cannot repeat moves")
@@ -66,6 +71,7 @@ def main():
     difficulty_str  = input("Select a difficulty level: E | M | H (coming soon): ")
     difficulty      = -1
     while True:
+        difficulty_str = difficulty_str.upper()
         match difficulty_str:
             case "E":
                 difficulty = Difficulty.EASY
@@ -77,9 +83,9 @@ def main():
                 difficulty_str = input("Must enter E | M: ")
     name            = input("Enter your name: ")
     human           = HumanPlayer(name=name)
-    ComputerPlayer  = ComputerPlayer(difficulty)
-    displayer       = Displayer(ComputerPlayer.board, human.board, human.ships)
-    gameManager     = GameManager(human, ComputerPlayer, displayer)
+    computer        = ComputerPlayer(difficulty)
+    displayer       = Displayer(computer.board, human.board, human.ships)
+    gameManager     = GameManager(human, computer, displayer)
 
     gameManager.start()
 
