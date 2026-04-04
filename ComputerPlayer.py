@@ -50,6 +50,16 @@ class ComputerPlayer(Player):
                 return self._hard_guess()
 
     def turn_result(self, move: Coordinate, rslt: AttackResult):
+        match self.difficulty:
+            case Difficulty.EASY:
+                return
+            case Difficulty.MEDIUM:
+                self._turn_result_med(move, rslt)
+                return
+            case Difficulty.HARD:
+                return
+
+    def _turn_result_med(self, move: Coordinate, rslt: AttackResult):
         if not rslt.hit:
             return
         if rslt.sunk:

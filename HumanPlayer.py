@@ -8,6 +8,9 @@ class HumanPlayer(Player):
         super().__init__(name=name)
 
     def place_ships(self) -> bool:
+        """
+        Prompts user for a location and orientation to place all ships
+        """
         self.ships.append(self._place_ship(Carrier()))
         self.ships.append(self._place_ship(Battleship()))
         self.ships.append(self._place_ship(Destroyer()))
@@ -15,6 +18,9 @@ class HumanPlayer(Player):
         self.ships.append(self._place_ship(PatrolBoat()))
 
     def _place_ship(self, ship: Ship) -> Coordinate:
+        """
+        Prompts user for a location and orientation to place ship
+        """
         while True:
             coor = None
             inp = input(f"Place your {ship.name}. Enter [col row orientation(h/v)] (e.g.: A 1 v): ")
@@ -42,6 +48,9 @@ class HumanPlayer(Player):
         return ship
 
     def take_turn(self) -> Coordinate:
+        """
+        Prompts user for a cell to strike. Returns the input Coordinate.
+        """
         while True:
             move = input("Your move, enter [x y] (no brackets): ")
             try:
@@ -58,4 +67,5 @@ class HumanPlayer(Player):
         return coor
 
     def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
+        """ No-op for human player """
         pass
