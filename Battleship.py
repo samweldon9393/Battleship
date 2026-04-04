@@ -1,10 +1,12 @@
 #!/bin/env python3
 
 from GameManager import GameManager
+from Client import BattleshipClient
 from ComputerPlayer import ComputerPlayer
 from Displayer import Displayer
 from HumanPlayer import HumanPlayer
 from Player import Player
+from Server import ClientPlayer
 from util import Difficulty
 
 import argparse
@@ -32,10 +34,17 @@ def single_player():
     gameManager.start()
 
 def server_mode(port: int):
-    pass
+    name            = input("Enter your name: ")
+    server_player   = HumanPlayer(name=name)
+    client_player   = ClientPlayer(port=port) # TODO get client's name
+    displayer       = Displayer(server_player.board, client_player.board, server_player.ships)
+    gameManager     = GameManager(server_player, client_player, displayer)
 
-def client_mode(port: int, ip: str):
-    pass
+    gameManager.start()
+
+def client_mode(ip: str = '127.0.0.1', port: int = 8888):
+    clnt = BattleshipClient(ip, port)
+    clnt.start()
 
 def main():
     parser = argparse.ArgumentParser(description="A command line Battleship game.")
@@ -93,8 +102,7 @@ def main():
         exit(0)
 
     elif args.client:
-        client_mode(args.port, args.ip)
-
+        client_mode(args.ip, args.port)
 
 if __name__ == '__main__':
     main()

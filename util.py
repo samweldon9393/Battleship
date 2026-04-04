@@ -4,6 +4,10 @@ from dataclasses import dataclass
 TOTAL_SHIPS = 5
 BOARD_SIZE  = 10
 
+#=============================================================================#
+#                               Game Utilities                                #
+#=============================================================================#
+
 @dataclass
 class Coordinate:
     col: int
@@ -39,3 +43,28 @@ ShipTypes = [
         "Submarine",
         "Patrol Boat"
         ]
+
+#=============================================================================#
+#                           Networking Utilities                              #
+#=============================================================================#
+
+def recv_all(conn, length):
+    data = b""
+    while len(data) < length:
+        chunk = conn.recv(length - len(data))
+        if not chunk:
+            raise ConnectionError("Connection closed mid-receive")
+        data += chunk
+    return data 
+
+import struct
+
+def send_msg(conn, msg: str):
+    encoded = msg.encode('utf-8')
+    header = struct.pack('>I', len(encoded))   # 4-byte big-endian length
+    conn.send(header + encoded)
+
+def recv_msg(conn) -> str:
+    header = recv_all(conn, 4)
+    length = struct.unpack('>I', header)[0]
+    return recv_all(conn, length).decode('utf-8')
