@@ -96,6 +96,12 @@ def single_player():
 
     gameManager.start()
 
+def server_mode(port: int):
+    pass
+
+def client_mode(port: int, ip: str):
+    pass
+
 def main():
     parser = argparse.ArgumentParser(description="A command line Battleship game.")
 
@@ -119,21 +125,43 @@ def main():
     parser.add_argument(
         "-p", "--port",
         type=int,
-        default=8888,
         help="Port number."
     )
     parser.add_argument(
         "-i", "--ip",
         type=str,
-        default="127.0.0.1",
         help="Server IP address to connect to."
     )
 
     args = parser.parse_args()
 
+    # Can only run in one of default, server, and client modes
     if args.default + args.server + args.client > 1:
         parser.print_help()
         exit(1)
+
+    if args.server and (not args.port or args.ip):
+        print("Must enter a port number to host server on")
+        parser.print_help()
+        exit(1)
+
+    if args.client and not (args.port and args.ip):
+        print("Must enter an ip address and port number to connect to")
+        parser.print_help()
+        exit(1)
+
+    if args.default or (args.server + args.client) == 0:
+        single_player()
+        exit(0)
+
+    if args.server:
+        server_mode(args.port)
+        exit(0)
+
+    if args.client:
+        client_mode(args.port, args.ip)
+        exit(0)
+
 
 if __name__ == '__main__':
     main()
