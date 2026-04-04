@@ -9,6 +9,11 @@ class BattleshipClient(object):
 
     def start(self):
         while True:
-            prompt   = recv_msg(self.conn)
-            response = input(prompt)
+            msg      = "start loop"
+            while msg[-2:] != ": ":
+                msg  = recv_msg(self.conn)
+                print(msg, end="")
+                if len(msg) < 2:
+                    msg += "  "
+            response = input("")
             send_msg(self.conn, response)

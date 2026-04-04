@@ -7,7 +7,8 @@ class Displayer(object):
                  player_board: Board = None,
                  opp_board: Board    = None,
                  ships: list[Ship]   = None,
-                 print_fn            = print
+                 print_fn            = print,
+                 conn                = None
                  ):
         self.player_board   = player_board  # player one's guess grid (opponent's board)
         self.opp_board      = opp_board     # player two's guess grid (opponent's board)
@@ -87,4 +88,4 @@ class Displayer(object):
         col_gap = "     "
         self.print_fn(col_gap + col_gap.join(b[0] for b in blocks))
         self.print_fn(col_gap + col_gap.join(b[1] for b in blocks))
-        self.print_fn()
+        self.print_fn("")

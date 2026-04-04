@@ -41,11 +41,13 @@ def server_mode(port: int):
             player_board=server_player.board,
             ships=server_player.ships,
     )
+
     client_player   = ClientPlayer(displayer=Displayer(), port=port)
     client_player.displayer.opp_board       = server_player.board
     server_displayer.opp_board              = client_player.board
     client_player.displayer.player_board    = client_player.board
     client_player.displayer.ships           = client_player.ships
+    client_player.displayer.print_fn        = lambda msg : send_msg(client_player.conn, msg+'\n')
 
     gameManager     = GameManager(server_player, client_player, server_displayer)
 

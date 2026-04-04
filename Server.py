@@ -43,12 +43,12 @@ class ClientPlayer(HumanPlayer):
             elif o == "h":
                 orient = Orientation.HORIZONTAL
             else:
-                send_msg(self.conn, "Must enter v or h for orientation")
+                send_msg(self.conn, "Must enter v or h for orientation: ")
                 continue
             if ship.place(self.ships, orient, coor):
                 break
             else:
-                send_msg(self.conn, "Cannot place ship there, try again")
+                send_msg(self.conn, "Cannot place ship there, try again: ")
         return ship
 
     def take_turn(self) -> Coordinate:
