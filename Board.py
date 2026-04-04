@@ -8,12 +8,12 @@ class Board(object):
     grid representing its opponent's ships
     """
     def __init__(self):
-        self.cell_grid:   list[list[CellState]]   = self._init_cell_grid()
+        self.cell_grid = self._init_cell_grid()
 
-    def _init_cell_grid(self):
+    def _init_cell_grid(self) -> list[list[CellState]]:
         return [[CellState.UNKNOWN] * BOARD_SIZE for _ in range(BOARD_SIZE)]
 
-    def get_cell(self, coor: Coordinate):
+    def get_cell(self, coor: Coordinate) -> CellState:
         return self.cell_grid[coor.row][coor.col]
 
     def update(self, coor: Coordinate, state: CellState):

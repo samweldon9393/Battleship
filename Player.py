@@ -7,10 +7,10 @@ import random
 
 class Player(object):
     def __init__(self, name: str = "Player"):
+        self.name       = name
         self.board      = Board()
         self.ships      = list()
         self.ships_left = TOTAL_SHIPS
-        self.name       = name
         self.unguessed  = Unguessed()
 
     @abstractmethod
@@ -39,7 +39,9 @@ class Player(object):
     def save_move(self, move: Coordinate):
         """
         Tries to record's a player's move. If that player already made that 
-        move, return False, else True.
+        move, return False, else True. Taking a turn has polymorphic behavior
+        based on derived player type, but handling repeat moves is same
+        for humans and robots, so this is a function of the base class.
         """
         if move in self.unguessed:
             self.unguessed.remove(move)
@@ -47,7 +49,15 @@ class Player(object):
         return False
 
 class Unguessed(object):
+    """
+    A simple container class that wraps a list and a set.
+    Allows O(1) membership testing and fast random choices (as python
+    sets don't implement random.choice)
+    """
     def __init__(self):
+        """
+        All possible coordinates are generated
+        """
         self._list = [Coordinate(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE)]
         self._set  = set(self._list)
 
