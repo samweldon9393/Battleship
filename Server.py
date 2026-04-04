@@ -1,3 +1,4 @@
+from Displayer import Displayer
 from HumanPlayer import HumanPlayer
 from Ship import Ship
 from util import BOARD_SIZE, Coordinate, Orientation, send_msg, recv_msg
@@ -5,7 +6,10 @@ from util import BOARD_SIZE, Coordinate, Orientation, send_msg, recv_msg
 import socket
 
 class ClientPlayer(HumanPlayer):
-    def __init__(self, port: int = 8888, name: str = "Human"):
+    def __init__(self,
+                 displayer: Displayer,
+                 port: int = 8888,
+                 name: str = "Human"):
         super().__init__(name=name)
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
@@ -13,11 +17,13 @@ class ClientPlayer(HumanPlayer):
         s.bind(('', port))
         s.listen()
         self.conn, self.addr = s.accept()               # blocks until client connects
+        self.displayer = displayer
 
     def _place_ship(self, ship: Ship) -> Coordinate:
         """
         Prompts user for a location and orientation to place ship
         """
+        self.displayer._draw_boards_side_by_side()
         while True:
             coor = None
             send_msg(self.conn, f"Place your {ship.name}. Enter [col row orientation(h/v)] (e.g.: A 1 v): ")
@@ -49,6 +55,7 @@ class ClientPlayer(HumanPlayer):
         """
         Prompts user for a cell to strike. Returns the input Coordinate.
         """
+        self.displayer.display()
         while True:
             send_msg(self.conn, "Your move, enter [x y] (no brackets): ")
             move = recv_msg(self.conn)

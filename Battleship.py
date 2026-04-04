@@ -1,13 +1,14 @@
 #!/bin/env python3
 
-from GameManager import GameManager
+from Board import Board
 from Client import BattleshipClient
 from ComputerPlayer import ComputerPlayer
 from Displayer import Displayer
+from GameManager import GameManager
 from HumanPlayer import HumanPlayer
 from Player import Player
 from Server import ClientPlayer
-from util import Difficulty
+from util import send_msg, Difficulty
 
 import argparse
 
@@ -36,9 +37,17 @@ def single_player():
 def server_mode(port: int):
     name            = input("Enter your name: ")
     server_player   = HumanPlayer(name=name)
-    client_player   = ClientPlayer(port=port) # TODO get client's name
-    displayer       = Displayer(server_player.board, client_player.board, server_player.ships)
-    gameManager     = GameManager(server_player, client_player, displayer)
+    server_displayer   = Displayer(
+            player_board=server_player.board,
+            ships=server_player.ships,
+    )
+    client_player   = ClientPlayer(displayer=Displayer(), port=port)
+    client_player.displayer.opp_board       = server_player.board
+    server_displayer.opp_board              = client_player.board
+    client_player.displayer.player_board    = client_player.board
+    client_player.displayer.ships           = client_player.ships
+
+    gameManager     = GameManager(server_player, client_player, server_displayer)
 
     gameManager.start()
 
