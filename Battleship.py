@@ -43,14 +43,13 @@ def server_mode(port: int):
     )
 
     client_player   = ClientPlayer(displayer=Displayer(), port=port)
-    client_player.displayer.opp_board       = server_player.board
     server_displayer.opp_board              = client_player.board
+    client_player.displayer.opp_board       = server_player.board
     client_player.displayer.player_board    = client_player.board
     client_player.displayer.ships           = client_player.ships
     client_player.displayer.print_fn        = lambda msg : send_msg(client_player.conn, msg+'\n')
 
     gameManager     = GameManager(server_player, client_player, server_displayer)
-
     gameManager.start()
 
 def client_mode(ip: str = '127.0.0.1', port: int = 8888):
@@ -92,6 +91,7 @@ def main():
 
     # Can only run in one of default, server, and client modes
     if args.default + args.server + args.client > 1:
+        print("Can only enter one of -d, -s, -c")
         parser.print_help()
         exit(1)
 
@@ -110,7 +110,6 @@ def main():
 
     elif args.server:
         server_mode(args.port)
-        exit(0)
 
     elif args.client:
         client_mode(args.ip, args.port)

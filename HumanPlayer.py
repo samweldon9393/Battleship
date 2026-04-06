@@ -1,21 +1,11 @@
 from Displayer import Displayer
 from Player import Player
-from Ship import AttackResult, Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
+from Ship import AttackResult, Ship
 from util import BOARD_SIZE, Coordinate, Orientation, ShipTypes
 
 class HumanPlayer(Player):
     def __init__(self, name: str = "Human"):
         super().__init__(name=name)
-
-    def place_ships(self) -> bool:
-        """
-        Prompts user for a location and orientation to place all ships
-        """
-        self.ships.append(self._place_ship(Carrier()))
-        self.ships.append(self._place_ship(Battleship()))
-        self.ships.append(self._place_ship(Destroyer()))
-        self.ships.append(self._place_ship(Submarine()))
-        self.ships.append(self._place_ship(PatrolBoat()))
 
     def _place_ship(self, ship: Ship) -> Coordinate:
         """

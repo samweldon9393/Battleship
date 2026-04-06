@@ -4,6 +4,11 @@ from Player import Player
 from Ship import AttackResult
 from util import Coordinate
 
+import threading
+
+"""
+GameManager: Entry point into the Battleship game, handles the main loop.
+"""
 class GameManager(object):
     def __init__(self,
                  p1: Player,
@@ -14,10 +19,17 @@ class GameManager(object):
         self.p2         = p2
         self.displayer  = displayer
 
+    def _place_both_players_ships(self):
+        t1 = threading.Thread(target=self.p1.place_ships)
+        t2 = threading.Thread(target=self.p2.place_ships)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+
     def start(self):
         self.displayer._draw_boards_side_by_side()
-        self.p1.place_ships()
-        self.p2.place_ships() #TODO concurrent?
+        self._place_both_players_ships()
         self.displayer._draw_ships()
         while True:
             turn_result = self.turn(self.p1, self.p2)

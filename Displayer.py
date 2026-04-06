@@ -2,28 +2,26 @@ from Board import Board
 from Ship import Ship
 from util import BOARD_SIZE, CellState, Coordinate
 
+"""
+Displayer: This class handles printing the ASCII art board and ship states.
+    A Displayer can print to the terminal or across a network connection by
+    using a parameterized print function.
+"""
 class Displayer(object):
     def __init__(self,
                  player_board: Board = None,
                  opp_board: Board    = None,
                  ships: list[Ship]   = None,
                  print_fn            = print,
-                 conn                = None
                  ):
-        self.player_board   = player_board  # player one's guess grid (opponent's board)
-        self.opp_board      = opp_board     # player two's guess grid (opponent's board)
-        self.ships          = ships         # player one's ship list 
+        self.player_board   = player_board  # player A's guess grid (player B's board)
+        self.opp_board      = opp_board     # player B's guess grid (player A's board)
+        self.ships          = ships         # player A's ship list 
         self.print_fn       = print_fn
 
     def display(self):
         self._draw_boards_side_by_side()
         self._draw_ships()
-
-    def register_player_board(self, board: Board):
-        self.player_board = board
-
-    def register_opp_board(self, board: Board):
-        self.opp_board = board
 
     def _draw_boards_side_by_side(self):
         GAP = "     "

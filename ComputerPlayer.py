@@ -20,14 +20,10 @@ class ComputerPlayer(Player):
         self.targets    = list()
         self.hit_ships  = set() # We might hit a second ship while in TARGET mode
 
-    def place_ships(self):
-        self.ships.append(self._place_ship(Carrier()))
-        self.ships.append(self._place_ship(Battleship()))
-        self.ships.append(self._place_ship(Destroyer()))
-        self.ships.append(self._place_ship(Submarine()))
-        self.ships.append(self._place_ship(PatrolBoat()))
-
     def _place_ship(self, ship: Ship) -> Ship:
+        """
+        Place a ship in a random location.
+        """
         while True:
             coor = Coordinate(
                     random.randint(0, BOARD_SIZE - 1),
@@ -52,6 +48,7 @@ class ComputerPlayer(Player):
     def turn_result(self, move: Coordinate, rslt: AttackResult):
         match self.difficulty:
             case Difficulty.EASY:
+                # Always random guessing so no need to track results
                 return
             case Difficulty.MEDIUM:
                 self._turn_result_med(move, rslt)

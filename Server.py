@@ -5,6 +5,12 @@ from util import BOARD_SIZE, Coordinate, Orientation, send_msg, recv_msg
 
 import socket
 
+"""
+ClientPlayer: A HumanPlayer with networking added. The client side of the 
+    TCP connection handles no game logic. Instead, the server side of the 
+    connection handles the client's player object. This allows for a 
+    single GameManager and minimal networking coordination.
+"""
 class ClientPlayer(HumanPlayer):
     def __init__(self,
                  displayer: Displayer,
@@ -19,11 +25,14 @@ class ClientPlayer(HumanPlayer):
         self.conn, self.addr = s.accept()               # blocks until client connects
         self.displayer = displayer
 
+    def place_ships(self):
+        self.displayer._draw_boards_side_by_side()
+        super().place_ships()
+
     def _place_ship(self, ship: Ship) -> Coordinate:
         """
         Prompts user for a location and orientation to place ship
         """
-        self.displayer._draw_boards_side_by_side()
         while True:
             coor = None
             send_msg(self.conn, f"Place your {ship.name}. Enter [col row orientation(h/v)] (e.g.: A 1 v): ")
