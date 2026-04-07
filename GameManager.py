@@ -20,6 +20,9 @@ class GameManager(object):
         self.displayer  = displayer
 
     def _place_both_players_ships(self):
+        """
+        Place all ships for both players concurrently
+        """
         t1 = threading.Thread(target=self.p1.place_ships)
         t2 = threading.Thread(target=self.p2.place_ships)
         t1.start()
@@ -28,6 +31,9 @@ class GameManager(object):
         t2.join()
 
     def start(self):
+        """
+        Main game loop
+        """
         self.displayer._draw_boards_side_by_side()
         self._place_both_players_ships()
         self.displayer._draw_ships()
@@ -35,14 +41,18 @@ class GameManager(object):
             turn_result = self.turn(self.p1, self.p2)
             output      = turn_result[1]
             if turn_result[0]:
-                print(output)
+                self.p1.output(output)
+                self.p2.output(output)
                 break
             turn_result = self.turn(self.p2, self.p1)
             output      += turn_result[1]
             if turn_result[0]:
-                print(output)
+                self.p1.output(output)
+                self.p2.output(output)
                 break
             self.displayer.display()
+            self.p1.output(output)
+            self.p2.output(output)
             print(output)
 
     def turn(self, player: Player, opp: Player) -> tuple[bool, str]:

@@ -1,6 +1,6 @@
 from Displayer import Displayer
 from Player import Player
-from Ship import AttackResult, Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
+from Ship import AttackResult, Ship
 from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, Modes
 import random
 

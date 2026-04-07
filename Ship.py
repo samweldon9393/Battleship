@@ -1,6 +1,10 @@
 from util import BOARD_SIZE, Orientation, Coordinate
 from dataclasses import dataclass
 
+"""
+Ship: Represents a ship in the game Battleship. Common base class that is
+    extended by each ship type in the game.
+"""
 class Ship(object):
     def __init__(self, name: str, size: int):
         self.name = name
@@ -67,6 +71,7 @@ class Submarine(Ship):
 class PatrolBoat(Ship):
     def __init__(self):
         super().__init__("Patrol Boat", 2)
+
 @dataclass
 class AttackResult:
     hit:  bool

@@ -5,6 +5,11 @@ from util import BOARD_SIZE, CellState, Coordinate, TOTAL_SHIPS
 from Ship import AttackResult, Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
 import random
 
+"""
+Player: A base class that exposes a common API across different types of player
+    (human, computer, remote client). Maintains game state from one player's
+    perspective.
+"""
 class Player(object):
     def __init__(self, name: str = "Player"):
         self.name       = name
@@ -36,12 +41,16 @@ class Player(object):
     def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
         pass
 
+    @abstractmethod
+    def output(self, msg: str):
+        pass
+
     def take_hit(self, coor: Coordinate) -> AttackResult:
         """
         Receive opponent's move. Return the results of the move.
         """
         for ship in self.ships:
-            if coor in ship.occupied:
+            if ship.occupies(coor):
                 self.board.update(coor, CellState.HIT)
                 return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
         self.board.update(coor, CellState.MISS)

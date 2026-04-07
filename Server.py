@@ -24,6 +24,9 @@ class ClientPlayer(HumanPlayer):
         s.listen()
         self.conn, self.addr = s.accept()               # blocks until client connects
         self.displayer = displayer
+        
+        send_msg(self.conn, "Enter your name: ")
+        self.name = recv_msg(self.conn)
 
     def place_ships(self):
         self.displayer._draw_boards_side_by_side()
@@ -80,3 +83,6 @@ class ClientPlayer(HumanPlayer):
                 continue
             break
         return coor
+
+    def output(self, msg: str):
+        send_msg(self.conn, msg)

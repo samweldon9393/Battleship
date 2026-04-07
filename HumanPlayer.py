@@ -3,6 +3,9 @@ from Player import Player
 from Ship import AttackResult, Ship
 from util import BOARD_SIZE, Coordinate, Orientation, ShipTypes
 
+"""
+HumanPlayer: Maintain's game state for a player and handles I/O
+"""
 class HumanPlayer(Player):
     def __init__(self, name: str = "Human"):
         super().__init__(name=name)
@@ -55,6 +58,9 @@ class HumanPlayer(Player):
                 continue
             break
         return coor
+
+    def output(self, msg: str):
+        print(msg)
 
     def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
         """ No-op for human player """
