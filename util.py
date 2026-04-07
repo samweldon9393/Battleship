@@ -22,6 +22,7 @@ class CellState(Enum):
     UNKNOWN = 0
     MISS    = 1
     HIT     = 2
+    SUNK    = 3
 
 class Orientation(Enum):
     HORIZONTAL  = 0

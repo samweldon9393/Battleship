@@ -53,7 +53,6 @@ class GameManager(object):
             self.displayer.display()
             self.p1.output(output)
             self.p2.output(output)
-            print(output)
 
     def turn(self, player: Player, opp: Player) -> tuple[bool, str]:
         """

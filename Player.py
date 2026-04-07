@@ -13,8 +13,8 @@ Player: A base class that exposes a common API across different types of player
 class Player(object):
     def __init__(self, name: str = "Player"):
         self.name       = name
-        self.board      = Board()
-        self.ships      = list()
+        self.board      = Board()       # Player's board from the opp's POV
+        self.ships      = list()        # Player's own ships
         self.ships_left = TOTAL_SHIPS
         self.unguessed  = Unguessed()
 
@@ -51,8 +51,13 @@ class Player(object):
         """
         for ship in self.ships:
             if ship.occupies(coor):
-                self.board.update(coor, CellState.HIT)
-                return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
+                ar = AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
+                if ar.sunk:
+                    for occupied_coor in ship.occupied:
+                        self.board.update(occupied_coor, CellState.SUNK)
+                else:
+                    self.board.update(coor, CellState.HIT)
+                return ar
         self.board.update(coor, CellState.MISS)
         return AttackResult(hit=False, sunk=False, ship=None)
 

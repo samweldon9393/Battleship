@@ -42,6 +42,8 @@ class Displayer(object):
                         symbol = " X "
                     elif cell == CellState.MISS:
                         symbol = " · "
+                    elif cell == CellState.SUNK:
+                        symbol = " U "
                     else:
                         symbol = "   "
                     cells += f"{symbol}│"

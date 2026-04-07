@@ -23,7 +23,7 @@ class BattleshipClient(object):
     def start(self):
         try:
             while True:
-                msg      = "start"
+                msg      = "  "
                 while msg[-2:] != ": ":
                     msg  = recv_msg(self.conn)
                     print(msg, end="")
