@@ -89,3 +89,17 @@ class Displayer(object):
         self.print_fn(col_gap + col_gap.join(b[0] for b in blocks))
         self.print_fn(col_gap + col_gap.join(b[1] for b in blocks))
         self.print_fn("")
+
+class SimulationDisplayer(Displayer):
+    def __init__(self):
+        super().__init__()
+        self.print_fn = lambda a : print("", end="")
+
+    def display(self):
+        pass
+
+    def _draw_boards_side_by_side(self):
+        pass
+
+    def _draw_ships(self):
+        pass

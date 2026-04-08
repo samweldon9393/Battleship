@@ -3,7 +3,7 @@
 from Board import Board
 from Client import BattleshipClient
 from ComputerPlayer import ComputerPlayer
-from Displayer import Displayer
+from Displayer import Displayer, SimulationDisplayer
 from GameManager import GameManager
 from HumanPlayer import HumanPlayer
 from Player import Player
@@ -74,12 +74,7 @@ def simulation_mode():
     p2_diff         = prompt_difficulty()
     p1              = ComputerPlayer(p1_diff)
     p2              = ComputerPlayer(p2_diff)
-    displayer       = Displayer(
-            opp_board=p2.guess_board,
-            player_board=p1.guess_board,
-            ships=p1.ships
-    )
-    gameManager     = GameManager(p1, p2, displayer)
+    gameManager     = GameManager(p1, p2, SimulationDisplayer())
 
     if gameManager.start() == p1:
         print("Player one won!")
