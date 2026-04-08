@@ -12,11 +12,11 @@ Player: A base class that exposes a common API across different types of player
 """
 class Player(object):
     def __init__(self, name: str = "Player"):
-        self.name       = name
-        self.board      = Board()       # Opponent's board from the player's POV
-        self.ships      = list()        # Player's own ships
-        self.ships_left = TOTAL_SHIPS
-        self.unguessed  = Unguessed()
+        self.name        = name
+        self.guess_board = Board()       # Opp's board from the player's POV
+        self.ships       = list()        # Player's own ships
+        self.ships_left  = TOTAL_SHIPS
+        self.unguessed   = Unguessed()
 
     def place_ships(self):
         """"
@@ -40,11 +40,11 @@ class Player(object):
     @abstractmethod
     def turn_result(self, move: Coordinate, result: AttackResult):
         if result.sunk:
-            self.board.update(move, CellState.SUNK)
+            self.guess_board.update(move, CellState.SUNK)
         elif result.hit:
-            self.board.update(move, CellState.HIT)
+            self.guess_board.update(move, CellState.HIT)
         else:
-            self.board.update(move, CellState.MISS)
+            self.guess_board.update(move, CellState.MISS)
 
     @abstractmethod
     def output(self, msg: str):

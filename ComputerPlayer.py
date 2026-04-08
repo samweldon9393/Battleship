@@ -1,6 +1,6 @@
 from Displayer import Displayer
 from Player import Player
-from Ship import AttackResult, Ship
+from Ship import AttackResult, Carrier, Battleship, Submarine, PatrolBoat, Ship
 from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, MAX_SHIP_SIZE, Modes
 import random
 
@@ -19,7 +19,8 @@ class ComputerPlayer(Player):
         self.mode       = Modes.HUNT
         self.targets    = list()
         self.hit_ships  = set() # We might hit a second ship while in TARGET mode
-        self.prob_map   = self._init_prob_map() # None if not in hard mode
+        self.prob_map   = dict()
+        self._init_prob_map()
 
     def _place_ship(self, ship: Ship) -> Ship:
         """
@@ -95,6 +96,19 @@ class ComputerPlayer(Player):
             self._update_prob_map(Coordinate(col=move.col, row=move.row-1), rslt)
         self._turn_result_med(move, rslt)
 
+    def _update_prob_map(self, cell: Coordinate, rslt: AttackResult):
+        num_ships = 0
+        if self.guess_board.ship_can_occupy(Carrier(), cell):
+            num_ships += 1
+        if self.guess_board.ship_can_occupy(Battleship(), cell):
+            num_ships += 1
+        if self.guess_board.ship_can_occupy(Submarine(), cell):
+            num_ships += 2 # Destroyer is same size
+        if self.guess_board.ship_can_occupy(PatrolBoat(), cell):
+            num_ships += 1
+        self.prob_map[cell] = num_ships
+
+
     def _easy_guess(self) -> Coordinate:
         return self.unguessed.random()
 
@@ -106,7 +120,22 @@ class ComputerPlayer(Player):
         self.mode = Modes.HUNT
         return self._easy_guess()
 
-    def _init_prob_map(self) -> list[list[int]]:
+    def _hard_guess(self) -> Coordinate:
+        if self.mode == Modes.HUNT:
+            max_prob  = max(self.prob_map.values())
+            max_cells = [k for k, v in self.prob_map.items() if v == max_prob]
+            cell = random.choice(max_cells)
+            while cell not in self.unguessed:
+                cell = random.choice(max_cells)
+            return cell
+        else:
+            return self._med_guess()
+
+    def _init_prob_map(self):
         if self.difficulty != Difficulty.HARD:
-            return None
-        return [[MAX_SHIP_SIZE] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+            return
+        coords = [Coordinate(x, y)
+               for x in range(BOARD_SIZE)
+               for y in range(BOARD_SIZE)]
+        for c in coords:
+            self.prob_map[c] = MAX_SHIP_SIZE

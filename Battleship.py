@@ -13,7 +13,7 @@ from util import send_msg, Difficulty
 import argparse
 
 def single_player():
-    difficulty_str  = input("Select a difficulty level: E | M | H (coming soon): ")
+    difficulty_str  = input("Select a difficulty level: E | M | H: ")
     difficulty      = -1
     while True:
         difficulty_str = difficulty_str.upper()
@@ -24,14 +24,17 @@ def single_player():
             case "M":
                 difficulty = Difficulty.MEDIUM
                 break
+            case "H":
+                difficulty = Difficulty.HARD
+                break
             case _:
-                difficulty_str = input("Must enter E | M: ")
+                difficulty_str = input("Must enter E | M | H: ")
     name            = input("Enter your name: ")
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
     displayer       = Displayer(
-            opp_board=computer.board,
-            player_board=human.board,
+            opp_board=computer.guess_board,
+            player_board=human.guess_board,
             ships=human.ships
     )
     gameManager     = GameManager(human, computer, displayer)
@@ -42,14 +45,14 @@ def server_mode(port: int):
     name            = input("Enter your name: ")
     server_player   = HumanPlayer(name=name)
     server_displayer   = Displayer(
-            player_board=server_player.board,
+            player_board=server_player.guess_board,
             ships=server_player.ships,
     )
 
     client_player   = ClientPlayer(displayer=Displayer(), port=port)
-    server_displayer.opp_board              = client_player.board
-    client_player.displayer.opp_board       = server_player.board
-    client_player.displayer.player_board    = client_player.board
+    server_displayer.opp_board              = client_player.guess_board
+    client_player.displayer.opp_board       = server_player.guess_board
+    client_player.displayer.player_board    = client_player.guess_board
     client_player.displayer.ships           = client_player.ships
     client_player.displayer.print_fn        = lambda msg : send_msg(client_player.conn, msg+'\n')
 
