@@ -31,29 +31,33 @@ class GameManager(object):
         t1.join()
         t2.join()
 
-    def start(self):
+    def start(self) -> Player:
         """
         Main game loop
         """
         self.displayer._draw_boards_side_by_side()
         self._place_both_players_ships()
         self.displayer._draw_ships()
+        winner = None
         while True:
             turn_result = self.turn(self.p1, self.p2)
             output      = turn_result[1]
             if turn_result[0]:
                 self.p1.output(output)
                 self.p2.output(output)
+                winner = self.p1
                 break
             turn_result = self.turn(self.p2, self.p1)
             output      += turn_result[1]
             if turn_result[0]:
                 self.p1.output(output)
                 self.p2.output(output)
+                winner = self.p2
                 break
             self.displayer.display()
             self.p1.output(output)
             self.p2.output(output)
+        return winner
 
     def turn(self, player: Player, opp: Player) -> tuple[bool, str]:
         """

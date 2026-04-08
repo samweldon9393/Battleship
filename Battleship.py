@@ -12,7 +12,7 @@ from util import send_msg, Difficulty
 
 import argparse
 
-def single_player():
+def prompt_difficulty() -> Difficulty:
     difficulty_str  = input("Select a difficulty level: E | M | H: ")
     difficulty      = -1
     while True:
@@ -29,6 +29,10 @@ def single_player():
                 break
             case _:
                 difficulty_str = input("Must enter E | M | H: ")
+    return difficulty
+
+def single_player():
+    difficulty      = prompt_difficulty()
     name            = input("Enter your name: ")
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
@@ -63,6 +67,25 @@ def client_mode(ip: str = '127.0.0.1', port: int = 8888):
     clnt = BattleshipClient(ip, port)
     clnt.start()
 
+def simulation_mode():
+    print("Computer Player 1 difficulty")
+    p1_diff         = prompt_difficulty()
+    print("Computer Player 2 difficulty")
+    p2_diff         = prompt_difficulty()
+    p1              = ComputerPlayer(p1_diff)
+    p2              = ComputerPlayer(p2_diff)
+    displayer       = Displayer(
+            opp_board=p2.guess_board,
+            player_board=p1.guess_board,
+            ships=p1.ships
+    )
+    gameManager     = GameManager(p1, p2, displayer)
+
+    if gameManager.start() == p1:
+        print("Player one won!")
+    else:
+        print("Player two won!")
+
 def main():
     parser = argparse.ArgumentParser(description="A command line Battleship game.")
 
@@ -82,6 +105,11 @@ def main():
         action="store_true",
         help="Run in mutli-player client mode."
     )
+    parser.add_argument(
+        "-m", "--simulation", 
+        action="store_true",
+        help="Run in simulation mode."
+    )
     # Optional with value
     parser.add_argument(
         "-p", "--port",
@@ -97,7 +125,7 @@ def main():
     args = parser.parse_args()
 
     # Can only run in one of default, server, and client modes
-    if args.default + args.server + args.client > 1:
+    if args.default + args.server + args.client + args.simulation > 1:
         print("Can only enter one of -d, -s, -c")
         parser.print_help()
         exit(1)
@@ -112,7 +140,7 @@ def main():
         parser.print_help()
         exit(1)
 
-    if args.default or (args.server + args.client) == 0:
+    if args.default or (args.server + args.client + args.simulation) == 0:
         single_player()
 
     elif args.server:
@@ -120,6 +148,9 @@ def main():
 
     elif args.client:
         client_mode(args.ip, args.port)
+
+    elif args.simulation:
+        simulation_mode()
 
 if __name__ == '__main__':
     main()
