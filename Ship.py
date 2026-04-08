@@ -18,12 +18,11 @@ class Ship(object):
                 if self.occupies(coor):
                     return False
         return True
-
     
     # TODO do something more efficient
     def place(self, ships: list,
-                    orientation: Orientation,
-                    origin: Coordinate) -> bool:
+              orientation: Orientation,
+              origin: Coordinate) -> bool:
         """
         Returns true if placement is ok, sets self.occupied to a list of 
         all occupied Coordinates

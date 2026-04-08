@@ -1,8 +1,9 @@
 from enum import Enum
 from dataclasses import dataclass
 
-TOTAL_SHIPS = 5
-BOARD_SIZE  = 10
+MAX_SHIP_SIZE   = 5
+TOTAL_SHIPS     = 5
+BOARD_SIZE      = 10
 
 #=============================================================================#
 #                               Game Utilities                                #
@@ -23,6 +24,7 @@ class CellState(Enum):
     MISS    = 1
     HIT     = 2
     SUNK    = 3
+    INVALID = 4
 
 class Orientation(Enum):
     HORIZONTAL  = 0

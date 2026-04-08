@@ -29,7 +29,11 @@ def single_player():
     name            = input("Enter your name: ")
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
-    displayer       = Displayer(computer.board, human.board, human.ships)
+    displayer       = Displayer(
+            opp_board=computer.board,
+            player_board=human.board,
+            ships=human.ships
+    )
     gameManager     = GameManager(human, computer, displayer)
 
     gameManager.start()

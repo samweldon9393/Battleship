@@ -61,7 +61,3 @@ class HumanPlayer(Player):
 
     def output(self, msg: str):
         print(msg)
-
-    def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
-        """ No-op for human player """
-        pass

@@ -13,7 +13,7 @@ Player: A base class that exposes a common API across different types of player
 class Player(object):
     def __init__(self, name: str = "Player"):
         self.name       = name
-        self.board      = Board()       # Player's board from the opp's POV
+        self.board      = Board()       # Opponent's board from the player's POV
         self.ships      = list()        # Player's own ships
         self.ships_left = TOTAL_SHIPS
         self.unguessed  = Unguessed()
@@ -38,8 +38,13 @@ class Player(object):
         pass
 
     @abstractmethod
-    def turn_result(self, move: Coordinate, result: AttackResult) -> Coordinate:
-        pass
+    def turn_result(self, move: Coordinate, result: AttackResult):
+        if result.sunk:
+            self.board.update(move, CellState.SUNK)
+        elif result.hit:
+            self.board.update(move, CellState.HIT)
+        else:
+            self.board.update(move, CellState.MISS)
 
     @abstractmethod
     def output(self, msg: str):
@@ -51,14 +56,7 @@ class Player(object):
         """
         for ship in self.ships:
             if ship.occupies(coor):
-                ar = AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
-                if ar.sunk:
-                    for occupied_coor in ship.occupied:
-                        self.board.update(occupied_coor, CellState.SUNK)
-                else:
-                    self.board.update(coor, CellState.HIT)
-                return ar
-        self.board.update(coor, CellState.MISS)
+                return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
         return AttackResult(hit=False, sunk=False, ship=None)
 
     def save_move(self, move: Coordinate):

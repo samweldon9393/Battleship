@@ -1,7 +1,7 @@
 from Displayer import Displayer
 from Player import Player
 from Ship import AttackResult, Ship
-from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, Modes
+from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, MAX_SHIP_SIZE, Modes
 import random
 
 """
@@ -19,6 +19,7 @@ class ComputerPlayer(Player):
         self.mode       = Modes.HUNT
         self.targets    = list()
         self.hit_ships  = set() # We might hit a second ship while in TARGET mode
+        self.prob_map   = self._init_prob_map() # None if not in hard mode
 
     def _place_ship(self, ship: Ship) -> Ship:
         """
@@ -46,6 +47,7 @@ class ComputerPlayer(Player):
                 return self._hard_guess()
 
     def turn_result(self, move: Coordinate, rslt: AttackResult):
+        super().turn_result(move, rslt)
         match self.difficulty:
             case Difficulty.EASY:
                 # Always random guessing so no need to track results
@@ -54,6 +56,7 @@ class ComputerPlayer(Player):
                 self._turn_result_med(move, rslt)
                 return
             case Difficulty.HARD:
+                self._turn_result_hard(move, rslt)
                 return
 
     def _turn_result_med(self, move: Coordinate, rslt: AttackResult):
@@ -82,6 +85,16 @@ class ComputerPlayer(Player):
                 if t in self.unguessed and t not in self.targets:
                     self.targets.append(t)
 
+    def _turn_result_hard(self, move: Coordinate, rslt: AttackResult):
+        for i in range(MAX_SHIP_SIZE):
+            self._update_prob_map(Coordinate(col=move.col+1, row=move.row), rslt)
+            if i == 0:
+                continue # don't do the same thing 4 times
+            self._update_prob_map(Coordinate(col=move.col-1, row=move.row), rslt)
+            self._update_prob_map(Coordinate(col=move.col, row=move.row+1), rslt)
+            self._update_prob_map(Coordinate(col=move.col, row=move.row-1), rslt)
+        self._turn_result_med(move, rslt)
+
     def _easy_guess(self) -> Coordinate:
         return self.unguessed.random()
 
@@ -92,3 +105,8 @@ class ComputerPlayer(Player):
         # Go back to HUNT mode, else we are already in HUNT mode
         self.mode = Modes.HUNT
         return self._easy_guess()
+
+    def _init_prob_map(self) -> list[list[int]]:
+        if self.difficulty != Difficulty.HARD:
+            return None
+        return [[MAX_SHIP_SIZE] * BOARD_SIZE for _ in range(BOARD_SIZE)]

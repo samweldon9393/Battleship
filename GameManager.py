@@ -1,6 +1,7 @@
 from Displayer import Displayer
 from HumanPlayer import HumanPlayer
 from Player import Player
+from Server import ClientPlayer
 from Ship import AttackResult
 from util import Coordinate
 
@@ -64,8 +65,8 @@ class GameManager(object):
 
         # One player makes a guess (no repeats)
         move = player.take_turn()
-        while not player.save_move(move): # Don't allow the same move twice
-            if isinstance(player, HumanPlayer):
+        while not player.save_move(move):
+            if isinstance(player, HumanPlayer) and not isinstance(player, ClientPlayer):
                 print("Cannot repeat moves")
             move = player.take_turn()
 
