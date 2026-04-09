@@ -75,7 +75,7 @@ One player hosts as the server and the other connects as the client. Both player
 ./Battleship.py -c -p 6000 -i 192.168.1.42
 ```
 
-Replace `192.168.1.42` with the server's IP address. Both players must be able to reach each other over the network — on a local network this works out of the box; over the internet, the server machine will need to forward the chosen port.
+Replace `192.168.1.42` with the server's IP address (or just localhost).
 
 To find your local IP address:
 - **macOS / Linux:** `ifconfig` or `ip addr`
