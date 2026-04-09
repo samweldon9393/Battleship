@@ -25,6 +25,10 @@ class Board(object):
     def update(self, coor: Coordinate, state: CellState):
         self.cell_grid[coor.row][coor.col] = state
 
+    def ship_sunk(self, ship: Ship):
+        for coor in ship.occupied:
+            self.update(coor, CellState.SUNK)
+
     def ship_can_occupy(self, ship: Ship, coor: Coordinate) -> bool:
         up, down, left, right = 0, 0, 0, 0
         go_up, go_down, go_left, go_right = True, True, True, True

@@ -64,7 +64,8 @@ class ComputerPlayer(Player):
         if not rslt.hit:
             return
         if rslt.sunk:
-            self.hit_ships.remove(rslt.ship)
+            if rslt.ship in self.hit_ships:
+                self.hit_ships.remove(rslt.ship)
             # If we hit multiple ships while in TARGET mode
             # Don't clear targets and switch to HUNT yet
             if len(self.hit_ships) > 0:

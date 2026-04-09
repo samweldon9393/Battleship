@@ -43,7 +43,7 @@ class Displayer(object):
                     elif cell == CellState.MISS:
                         symbol = " · "
                     elif cell == CellState.SUNK:
-                        symbol = " U "
+                        symbol = " S "
                     else:
                         symbol = "   "
                     cells += f"{symbol}│"
@@ -65,7 +65,7 @@ class Displayer(object):
             self.print_fn(left + GAP + right)
 
         self.print_fn(h_line_bot + GAP + h_line_bot)
-        self.print_fn("\n  X = Hit   · = Miss   (blank) = Unknown\n")
+        self.print_fn("\n  X = Hit   · = Miss   S = Sunk   (blank) = Unknown\n")
 
     def _draw_ships(self):
         self.print_fn("  YOUR SHIPS\n")

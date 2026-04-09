@@ -6,7 +6,8 @@ Ship: Represents a ship in the game Battleship. Common base class that is
     extended by each ship type in the game.
 """
 class Ship(object):
-    def __init__(self, name: str, size: int):
+    def __init__(self, sid:int, name: str, size: int):
+        self.sid  = sid
         self.name = name
         self.size = size
         self.hits = 0
@@ -50,26 +51,29 @@ class Ship(object):
             return True
         return False
 
+    def __hash__(self) -> int:
+        return hash(self.name) + self.sid
+
 
 class AircraftCarrier(Ship):
-    def __init__(self):
-        super().__init__("Aircraft Carrier", 5)
+    def __init__(self, sid: int):
+        super().__init__(sid, "Aircraft Carrier", 5)
 
 class Battleship(Ship):
-    def __init__(self):
-        super().__init__("Battleship", 4)
+    def __init__(self, sid: int):
+        super().__init__(sid, "Battleship", 4)
 
 class Cruiser(Ship):
-    def __init__(self):
-        super().__init__("Cruiser", 3)
+    def __init__(self, sid: int):
+        super().__init__(sid, "Cruiser", 3)
 
 class Destroyer(Ship):
-    def __init__(self):
-        super().__init__("Destroyer", 2)
+    def __init__(self, sid: int):
+        super().__init__(sid, "Destroyer", 2)
 
 class Submarine(Ship):
-    def __init__(self):
-        super().__init__("Submarine", 1)
+    def __init__(self, sid: int):
+        super().__init__(sid, "Submarine", 1)
 
 @dataclass
 class AttackResult:
