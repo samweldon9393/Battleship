@@ -45,7 +45,7 @@ class ClientPlayer(HumanPlayer):
                 x = x.upper()
                 y = int(y)
                 o = o.lower()
-                coor = Coordinate(Coordinate.cols[x], y - 1)
+                coor = Coordinate(row=Coordinate.rows[x], col=y-1)
             except Exception as e:
                 send_msg(self.conn, f"Move must be in the form [x y o] (no brackets) {e}")
                 continue
@@ -77,7 +77,7 @@ class ClientPlayer(HumanPlayer):
                 y = int(y)
                 if not 0 < y <= BOARD_SIZE:
                     raise Exception("Invalid cell input (must be 0 < row <= 10")
-                coor = Coordinate(Coordinate.cols[x], int(y)-1)
+                coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
             except Exception as e:
                 send_msg(self.conn, f"Move must be in the form [x y] (no brackets) {e}")
                 continue

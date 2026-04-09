@@ -1,6 +1,6 @@
 from Displayer import Displayer
 from Player import Player
-from Ship import AttackResult, Carrier, Battleship, Submarine, PatrolBoat, Ship
+from Ship import AttackResult, AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Ship
 from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, MAX_SHIP_SIZE, Modes
 import random
 
@@ -77,8 +77,8 @@ class ComputerPlayer(Player):
             self.hit_ships.add(rslt.ship)
             new_targets = [
                     Coordinate(i, j)
-                    for i in range(move.col - 1, move.col + 2)
-                    for j in range(move.row - 1, move.row + 2)
+                    for i in range(move.row - 1, move.row + 2)
+                    for j in range(move.col - 1, move.col + 2)
                     if 0 <= i < BOARD_SIZE and 0 <= j < BOARD_SIZE
                     ]
             for t in new_targets:
@@ -88,12 +88,12 @@ class ComputerPlayer(Player):
 
     def _turn_result_hard(self, move: Coordinate, rslt: AttackResult):
         for i in range(MAX_SHIP_SIZE):
-            self._update_prob_map(Coordinate(col=move.col+1, row=move.row), rslt)
+            self._update_prob_map(Coordinate(col=move.row+1, row=move.col), rslt)
             if i == 0:
                 continue # don't do the same thing 4 times
-            self._update_prob_map(Coordinate(col=move.col-1, row=move.row), rslt)
-            self._update_prob_map(Coordinate(col=move.col, row=move.row+1), rslt)
-            self._update_prob_map(Coordinate(col=move.col, row=move.row-1), rslt)
+            self._update_prob_map(Coordinate(col=move.row-1, row=move.col), rslt)
+            self._update_prob_map(Coordinate(col=move.row, row=move.col+1), rslt)
+            self._update_prob_map(Coordinate(col=move.row, row=move.col-1), rslt)
         self._turn_result_med(move, rslt)
 
     def _update_prob_map(self, cell: Coordinate, rslt: AttackResult):

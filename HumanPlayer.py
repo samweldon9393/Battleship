@@ -16,13 +16,13 @@ class HumanPlayer(Player):
         """
         while True:
             coor = None
-            inp = input(f"Place your {ship.name}. Enter [col row orientation(h/v)] (e.g.: A 1 v): ")
+            inp = input(f"Place your {ship.name}. Enter [row col orientation(h/v)] (e.g.: A 1 v): ")
             try:
                 x, y, o = inp.split(' ')
                 x = x.upper()
                 y = int(y)
                 o = o.lower()
-                coor = Coordinate(Coordinate.cols[x], y - 1)
+                coor = Coordinate(row=Coordinate.rows[x], col=y-1)
             except Exception as e:
                 print(f"Move must be in the form [x y o] (no brackets) {e}")
                 continue
@@ -52,7 +52,7 @@ class HumanPlayer(Player):
                 y = int(y)
                 if not 0 < y <= BOARD_SIZE:
                     raise Exception("Invalid cell input (must be 0 < row <= 10")
-                coor = Coordinate(Coordinate.cols[x], int(y)-1)
+                coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
             except Exception as e:
                 print(f"Move must be in the form [x y] (no brackets) {e}")
                 continue

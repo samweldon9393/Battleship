@@ -18,7 +18,7 @@ class Board(object):
         natural with the [letter, number] format, so in the Board class, that
         is corrected to (row, col) to work with the data structure properly
         """
-        if not (0 <= coor.col < BOARD_SIZE) or not (0 <= coor.row < BOARD_SIZE):
+        if not (0 <= coor.row < BOARD_SIZE) or not (0 <= coor.col < BOARD_SIZE):
             return CellState.INVALID
         return self.cell_grid[coor.row][coor.col]
 
@@ -29,22 +29,22 @@ class Board(object):
         up, down, left, right = 0, 0, 0, 0
         go_up, go_down, go_left, go_right = True, True, True, True
         for i in range(ship.size):
-            state = self.get_cell(Coordinate(col=coor.col+i, row=coor.row))
+            state = self.get_cell(Coordinate(row=coor.row+i, col=coor.col))
             if go_right and (state == CellState.UNKNOWN or state == CellState.HIT):
                 right += 1
             else:
                 go_right = False
-            state = self.get_cell(Coordinate(col=coor.col-i, row=coor.row))
+            state = self.get_cell(Coordinate(row=coor.row-i, col=coor.col))
             if go_left and (state == CellState.UNKNOWN or state == CellState.HIT):
                 left += 1
             else:
                 go_left = False
-            state = self.get_cell(Coordinate(col=coor.col, row=coor.row+1))
+            state = self.get_cell(Coordinate(row=coor.row, col=coor.col+1))
             if go_down and (state == CellState.UNKNOWN or state == CellState.HIT):
                 down += 1
             else:
                 go_down = False
-            state = self.get_cell(Coordinate(col=coor.col, row=coor.row-1))
+            state = self.get_cell(Coordinate(row=coor.row, col=coor.col-1))
             if go_up and (state == CellState.UNKNOWN or state == CellState.HIT):
                 up += 1
             else:

@@ -25,7 +25,7 @@ class Displayer(object):
 
     def _draw_boards_side_by_side(self):
         GAP = "     "
-        col_headers = "    " + "   ".join("ABCDEFGHIJ"[:BOARD_SIZE])
+        col_headers = "    " + "   ".join("1234567891"[:BOARD_SIZE]) + "0"
 
         h_line_top = "  ┌" + "───┬" * (BOARD_SIZE - 1) + "───┐"
         h_line_mid = "  ├" + "───┼" * (BOARD_SIZE - 1) + "───┤"
@@ -33,11 +33,11 @@ class Displayer(object):
 
         def board_rows(board):
             lines = []
-            for row in range(BOARD_SIZE):
-                row_label = f"{row + 1:<2}"
+            for row in "ABCDEFGHIJ":
+                row_label = f" {row}"
                 cells = ""
                 for col in range(BOARD_SIZE):
-                    cell = board.get_cell(Coordinate(col, row))
+                    cell = board.get_cell(Coordinate(Coordinate.rows[row], col))
                     if cell == CellState.HIT:
                         symbol = " X "
                     elif cell == CellState.MISS:
@@ -48,7 +48,7 @@ class Displayer(object):
                         symbol = "   "
                     cells += f"{symbol}│"
                 lines.append(f"{row_label}│{cells}")
-                if row < BOARD_SIZE - 1:
+                if row != "J":
                     lines.append(h_line_mid)
             return lines
 

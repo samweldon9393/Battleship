@@ -28,11 +28,11 @@ class Ship(object):
         all occupied Coordinates
         """
         spaces = [None] * self.size
-        cur = Coordinate(origin.col, origin.row)
+        cur = Coordinate(row=origin.row, col=origin.col)
         for i in range(self.size):
             if cur.row >= BOARD_SIZE or cur.col >= BOARD_SIZE:
                 return False
-            spaces[i] = Coordinate(cur.col, cur.row)
+            spaces[i] = Coordinate(row=cur.row, col=cur.col)
             if orientation == Orientation.HORIZONTAL:
                 cur.col += 1
             else:
@@ -51,25 +51,25 @@ class Ship(object):
         return False
 
 
-class Carrier(Ship):
+class AircraftCarrier(Ship):
     def __init__(self):
-        super().__init__("Carrier", 5)
+        super().__init__("Aircraft Carrier", 5)
 
 class Battleship(Ship):
     def __init__(self):
         super().__init__("Battleship", 4)
 
+class Cruiser(Ship):
+    def __init__(self):
+        super().__init__("Cruiser", 3)
+
 class Destroyer(Ship):
     def __init__(self):
-        super().__init__("Destroyer", 3)
+        super().__init__("Destroyer", 2)
 
 class Submarine(Ship):
     def __init__(self):
-        super().__init__("Submarine", 3)
-
-class PatrolBoat(Ship):
-    def __init__(self):
-        super().__init__("Patrol Boat", 2)
+        super().__init__("Submarine", 1)
 
 @dataclass
 class AttackResult:

@@ -80,7 +80,7 @@ class GameManager(object):
         # That result is then relayed to the first player to record
         player.turn_result(move, attk_rslt)
 
-        output      = f"{player.name} guessed [{Coordinate.inds[move.col]}, {move.row + 1}]. "
+        output      = f"{player.name} guessed [{Coordinate.inds[move.row]}, {move.col + 1}]. "
         if attk_rslt.hit:
             if attk_rslt.sunk:
                 output += f"{player.name} sunk {opp.name}'s {attk_rslt.ship.name}\n"

@@ -2,7 +2,7 @@ from Board import Board
 from Displayer import Displayer
 from abc import abstractmethod
 from util import BOARD_SIZE, CellState, Coordinate, TOTAL_SHIPS
-from Ship import AttackResult, Carrier, Battleship, Destroyer, Submarine, PatrolBoat, Ship
+from Ship import AttackResult, AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Ship
 import random
 
 """
@@ -23,11 +23,13 @@ class Player(object):
         Place all 5 ships with _place_ship abstractmethod that handles 
         getting client input or generating locations for ComputerPlayers.
         """
-        self.ships.append(self._place_ship(Carrier()))
+        self.ships.append(self._place_ship(AircraftCarrier()))
         self.ships.append(self._place_ship(Battleship()))
+        self.ships.append(self._place_ship(Cruiser()))
+        self.ships.append(self._place_ship(Destroyer()))
         self.ships.append(self._place_ship(Destroyer()))
         self.ships.append(self._place_ship(Submarine()))
-        self.ships.append(self._place_ship(PatrolBoat()))
+        self.ships.append(self._place_ship(Submarine()))
 
     @abstractmethod
     def _place_ship(self, ship: Ship) -> Coordinate:
