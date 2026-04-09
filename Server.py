@@ -32,6 +32,30 @@ class ClientPlayer(HumanPlayer):
         self.displayer._draw_boards_side_by_side()
         super().place_ships()
 
+    def take_turn(self) -> Coordinate:
+        """
+        Prompts user for a cell to strike. Returns the input Coordinate.
+        """
+        self.displayer.display()
+        while True:
+            send_msg(self.conn, "Your move, enter [x y] (no brackets): ")
+            move = recv_msg(self.conn)
+            try:
+                x, y = move.split(' ')
+                x = x.upper()
+                y = int(y)
+                if not 0 < y <= BOARD_SIZE:
+                    raise Exception("Invalid cell input (must be 0 < row <= 10")
+                coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
+            except Exception as e:
+                send_msg(self.conn, f"Move must be in the form [x y] (no brackets) {e}")
+                continue
+            break
+        return coor
+
+    def output(self, msg: str):
+        send_msg(self.conn, msg)
+
     def _place_ship(self, ship: Ship) -> Coordinate:
         """
         Prompts user for a location and orientation to place ship
@@ -62,27 +86,3 @@ class ClientPlayer(HumanPlayer):
             else:
                 send_msg(self.conn, "Cannot place ship there, try again: ")
         return ship
-
-    def take_turn(self) -> Coordinate:
-        """
-        Prompts user for a cell to strike. Returns the input Coordinate.
-        """
-        self.displayer.display()
-        while True:
-            send_msg(self.conn, "Your move, enter [x y] (no brackets): ")
-            move = recv_msg(self.conn)
-            try:
-                x, y = move.split(' ')
-                x = x.upper()
-                y = int(y)
-                if not 0 < y <= BOARD_SIZE:
-                    raise Exception("Invalid cell input (must be 0 < row <= 10")
-                coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
-            except Exception as e:
-                send_msg(self.conn, f"Move must be in the form [x y] (no brackets) {e}")
-                continue
-            break
-        return coor
-
-    def output(self, msg: str):
-        send_msg(self.conn, msg)

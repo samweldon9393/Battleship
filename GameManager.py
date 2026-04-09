@@ -18,18 +18,8 @@ class GameManager(object):
                  ):
         self.p1         = p1
         self.p2         = p2
+        self.cur_turn   = 1
         self.displayer  = displayer
-
-    def _place_both_players_ships(self):
-        """
-        Place all ships for both players concurrently
-        """
-        t1 = threading.Thread(target=self.p1.place_ships)
-        t2 = threading.Thread(target=self.p2.place_ships)
-        t1.start()
-        t2.start()
-        t1.join()
-        t2.join()
 
     def start(self) -> Player:
         """
@@ -57,6 +47,7 @@ class GameManager(object):
             self.displayer.display()
             self.p1.output(output)
             self.p2.output(output)
+            self.cur_turn += 1
         return winner
 
     def turn(self, player: Player, opp: Player) -> tuple[bool, str]:
@@ -87,10 +78,22 @@ class GameManager(object):
                 # Update num ships left here as it makes formatting output easy
                 opp.ships_left -= 1
                 if opp.ships_left == 0:
-                    output += f"{player.name} wins!\n"
+                    output += f"{player.name} wins (on turn {self.cur_turn})!\n"
                     return (True, output)
             else:
                 output += f"{player.name} hit {opp.name}'s {attk_rslt.ship.name}\n"
         else:
             output += f"{player.name} miss\n"
         return (False, output)
+
+    def _place_both_players_ships(self):
+        """
+        Place all ships for both players concurrently
+        """
+        t1 = threading.Thread(target=self.p1.place_ships)
+        t2 = threading.Thread(target=self.p2.place_ships)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+

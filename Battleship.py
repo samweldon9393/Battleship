@@ -77,9 +77,9 @@ def simulation_mode():
     gameManager     = GameManager(p1, p2, SimulationDisplayer())
 
     if gameManager.start() == p1:
-        print("Player one won!")
+        print(f"Player one won (on turn {gameManager.cur_turn})!")
     else:
-        print("Player two won!")
+        print(f"Player two won (on turn {gameManager.cur_turn})!")
 
 def main():
     parser = argparse.ArgumentParser(description="A command line Battleship game.")
@@ -121,7 +121,7 @@ def main():
 
     # Can only run in one of default, server, and client modes
     if args.default + args.server + args.client + args.simulation > 1:
-        print("Can only enter one of -d, -s, -c")
+        print("Can only enter one of -d, -s, -c, -m")
         parser.print_help()
         exit(1)
 

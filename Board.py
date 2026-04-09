@@ -9,9 +9,6 @@ class Board(object):
     def __init__(self):
         self.cell_grid = self._init_cell_grid()
 
-    def _init_cell_grid(self) -> list[list[CellState]]:
-        return [[CellState.UNKNOWN] * BOARD_SIZE for _ in range(BOARD_SIZE)]
-
     def get_cell(self, coor: Coordinate) -> CellState:
         """
         Coordinates are used elsewhere in the form (col, row), as it is more
@@ -23,16 +20,27 @@ class Board(object):
         return self.cell_grid[coor.row][coor.col]
 
     def update(self, coor: Coordinate, state: CellState):
+        """
+        Updates cell at coor to state
+        """
         self.cell_grid[coor.row][coor.col] = state
 
     def ship_sunk(self, ship: Ship):
+        """
+        Updates all cells occupied by ship to sunk status
+        """
         for coor in ship.occupied:
             self.update(coor, CellState.SUNK)
 
     def ship_can_occupy(self, ship: Ship, coor: Coordinate) -> bool:
+        """
+        Returns True if ship can occupy coor, else False
+        """
+        if self.get_cell(coor) != CellState.UNKNOWN:
+            return False
         up, down, left, right = 0, 0, 0, 0
         go_up, go_down, go_left, go_right = True, True, True, True
-        for i in range(ship.size):
+        for i in range(ship.size - 1):
             state = self.get_cell(Coordinate(row=coor.row+i, col=coor.col))
             if go_right and (state == CellState.UNKNOWN or state == CellState.HIT):
                 right += 1
@@ -54,4 +62,7 @@ class Board(object):
             else:
                 go_up = False
 
-        return (up + down >= ship.size) or (left + right >= ship.size)
+        return (up + down + 1 >= ship.size) or (left + right + 1 >= ship.size)
+
+    def _init_cell_grid(self) -> list[list[CellState]]:
+        return [[CellState.UNKNOWN] * BOARD_SIZE for _ in range(BOARD_SIZE)]

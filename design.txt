@@ -1,70 +1,99 @@
-- Enums / Data Classes
-    - Coordinate (row: int, col: int)
-    - CellState (enum): UNKNOWN, MISS, HIT
-    - AttackResult (dataclass): hit: bool, sunk: bool, ship: Ship | None, already_guessed: bool
+util.py
+    - Data Classes
+        - Coordinate: (row: int, col: int)
+            + rows: {LETTER -> INDEX}, inds: {INDEX -> LETTER}, hash()
+        - AttackResult: hit: bool, sunk: bool, ship: Ship | None
+    - Enums
+        - CellState: UNKNOWN, MISS, HIT, SUNK, INVALID
+        - Orientation: HORIZONTAL, VERTICAL
+        - Difficulty: EASY, MEDIUM, HARD
+        - Modes: HUNT, TARGET
+    - Constants
+        - MAX_SHIP_SIZE
+        - TOTAL_SHIPS
+        - BOARD_SIZE
+
+/*****************************************************************************/
+ *                       Classes, Members, APIS                              *
+/*****************************************************************************/
 
 - Ship  ← base class
+    * sid:  int ← unique identifier for hashing
     * name: str
     * size: int
     * hits: int
-    * orientation: Orientation (enum: HORIZONTAL | VERTICAL)
-    * origin: Coordinate  ← top-left anchor point
-    % take_hit() -> None
+    * occupied: list
+    % place() -> bool
     % is_sunk() -> bool
-    % occupies(coord) -> bool   ← useful for placement logic
-    - Carrier(Ship)       size=5
-    - Battleship(Ship)    size=4
-    - Destroyer(Ship)     size=3
-    - Submarine(Ship)     size=3
-    - PatrolBoat(Ship)    size=2   ← standard Battleship includes this
+    % occupies(coord) -> bool
+    - Derived Classes
+        - AircraftCarrier(Ship) size=5
+        - Battleship(Ship)      size=4
+        - Cruiser(Ship)         size=3
+        - Destroyer(Ship)       size=2
+        - Submarine(Ship)       size=1
 
 - Board
     """ Each player has a board representing their own ships and what 
     they know about their opponent's ships """
-    * GRID_SIZE: int = 10
-    * ship_grid: List[List[Ship | None]]
-    * guess_grid: List[List[CellState]]
-    * ships: List[Ship]
-    % place_ship(ship, origin, orientation) -> bool   ← False if invalid placement
-    % receive_attack(coord: Coordinate) -> AttackResult
-    % all_ships_sunk() -> bool
-    % is_valid_placement(ship, origin, orientation) -> bool
+    * cell_grid: List[List[CellState]]
+    % get_cell -> CellState
+    % update
+    % ship_sunk -> bool
+    % ship_can_occupy -> bool
 
 - Player  ← abstract base class
     * name: str
-    * board: Board
-    % place_ships() -> None   ← abstract
-    % take_turn(opponent_board: Board) -> AttackResult   ← abstract
+    * guess_board: Board            ← Opponent's board
+    * ships: list[Ship]             ← Player's own ships
+    * unguessed: Unguessed          ← Collection of unguessed cells
+    % place_ships() -> None         ← abstract
+    % take_turn() -> Coordinate     ← abstract
+    % output() -> None              ← abstract
+    % turn_result() -> None
+    % take_hit() -> AttackResult
+    % save_move() -> None
 
     - HumanPlayer(Player)
-        % place_ships()   ← prompts for input
-        % take_turn()     ← prompts for coordinate guess
+        % output() -> None    ← Prints to terminal
+        % take_turn()         ← Prompts for coordinate guess
+
+        - ClientPlayer(HumanPlayer)
+            - conn: TCP connection
+            - addr: IP address
+            - displayer: Displayer
 
     - ComputerPlayer(Player)
         * difficulty: Difficulty (enum: EASY | MEDIUM | HARD)
-        * last_hit: Coordinate | None
-        * hit_stack: List[Coordinate]   ← for medium: coords to try after a hit
-        % place_ships()   ← random placement
+        * mode: Mode (enum: HUNT | TARGET)
+        * targets: List[Coordinate]   ← for medium, hard: stack of coords to try after a hit
+        * hit_ships: Set[Ship]        ← for medium, hard: keeps track of
+                                                          recently hit ships
+        * prob_map: Dict[Coordinate : int] ← for hard: number of ships that can
+                                                       occupy each cell
         % take_turn()     ← dispatches to strategy
-        % _easy_guess()
-        % _medium_guess()
-        % _hard_guess()
-
-- GameManager
-    """ A GameManager has two player objects, each of which has a board object
-    which are logical opposites of one another """
-    * player1: Player
-    * player2: Player
-    * current_turn: Player
-    * game_over: bool
-    % setup_game() -> None
-    % play_turn() -> AttackResult
-    % switch_turns() -> None
-    % check_win() -> Player | None
-    % run() -> None   ← main game loop
+        % turn_result() <- None
 
 - Displayer
-    % display_board(board: Board, hide_ships: bool) -> None
-    % display_both_boards(player: Player) -> None   ← your ships + enemy guess grid
-    % display_attack_result(result: AttackResult) -> None
-    % display_winner(player: Player) -> None
+    * player_board: Board
+    * opp_board: Board
+    * ships: List[Ship]
+    * print_fn: Function
+    % _draw_boards_side_by_side -> None
+    % display -> None
+
+    - SimulationDisplayer(Displayer)
+        * print_fn: Function (no-op)
+        % display() -> None (no-op)
+
+- GameManager
+    * p1: Player
+    * p2: Player
+    * cur_turn: int
+    * displayer: Displayer
+    % start() -> Player             ← main game loop
+    % turn()  -> Tuple[bool, str]   ← each player takes one turn
+
+- BattleshipClient
+    - conn: TCP connection
+    % start

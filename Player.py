@@ -32,14 +32,9 @@ class Player(object):
         self.ships.append(self._place_ship(Submarine(7)))
 
     @abstractmethod
-    def _place_ship(self, ship: Ship) -> Coordinate:
-        pass
-
-    @abstractmethod
     def take_turn(self) -> Coordinate:
         pass
 
-    @abstractmethod
     def turn_result(self, move: Coordinate, result: AttackResult):
         if result.sunk:
             self.guess_board.ship_sunk(result.ship)
@@ -72,6 +67,11 @@ class Player(object):
             self.unguessed.remove(move)
             return True
         return False
+
+    @abstractmethod
+    def _place_ship(self, ship: Ship) -> Coordinate:
+        pass
+
 
 class Unguessed(object):
     """

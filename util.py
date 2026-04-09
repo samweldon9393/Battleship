@@ -39,14 +39,6 @@ class Modes(Enum):
     HUNT    = 0
     TARGET  = 1
 
-ShipTypes = [
-        "Carrier",
-        "Battleship",
-        "Destroyer",
-        "Submarine",
-        "Patrol Boat"
-        ]
-
 #=============================================================================#
 #                           Networking Utilities                              #
 #=============================================================================#

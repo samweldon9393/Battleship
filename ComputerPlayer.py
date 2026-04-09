@@ -19,24 +19,7 @@ class ComputerPlayer(Player):
         self.mode       = Modes.HUNT
         self.targets    = list()
         self.hit_ships  = set() # We might hit a second ship while in TARGET mode
-        self.prob_map   = dict()
-        self._init_prob_map()
-
-    def _place_ship(self, ship: Ship) -> Ship:
-        """
-        Place a ship in a random location.
-        """
-        while True:
-            coor = Coordinate(
-                    random.randint(0, BOARD_SIZE - 1),
-                    random.randint(0, BOARD_SIZE - 1)
-                    )
-            orient = random.choice(
-                    [Orientation.VERTICAL, Orientation.HORIZONTAL]
-                    )
-            if ship.place(self.ships, orient, coor):
-                break
-        return ship
+        self.prob_map   = self._init_prob_map()
 
     def take_turn(self) -> Coordinate:
         match self.difficulty:
@@ -61,6 +44,9 @@ class ComputerPlayer(Player):
                 return
 
     def _turn_result_med(self, move: Coordinate, rslt: AttackResult):
+        """
+        Update targets stack and current mode based on a turn result
+        """
         if not rslt.hit:
             return
         if rslt.sunk:
@@ -88,27 +74,31 @@ class ComputerPlayer(Player):
                     self.targets.append(t)
 
     def _turn_result_hard(self, move: Coordinate, rslt: AttackResult):
+        """
+        Update probability map, target stack, and mode based on a turn result
+        """
         for i in range(MAX_SHIP_SIZE):
-            self._update_prob_map(Coordinate(col=move.row+1, row=move.col), rslt)
+            self._update_prob_map(Coordinate(col=move.row+i, row=move.col), rslt)
             if i == 0:
                 continue # don't do the same thing 4 times
-            self._update_prob_map(Coordinate(col=move.row-1, row=move.col), rslt)
-            self._update_prob_map(Coordinate(col=move.row, row=move.col+1), rslt)
-            self._update_prob_map(Coordinate(col=move.row, row=move.col-1), rslt)
+            self._update_prob_map(Coordinate(col=move.row-i, row=move.col), rslt)
+            self._update_prob_map(Coordinate(col=move.row, row=move.col+i), rslt)
+            self._update_prob_map(Coordinate(col=move.row, row=move.col-i), rslt)
         self._turn_result_med(move, rslt)
 
     def _update_prob_map(self, cell: Coordinate, rslt: AttackResult):
         num_ships = 0
-        if self.guess_board.ship_can_occupy(Carrier(), cell):
+        if self.guess_board.ship_can_occupy(AircraftCarrier(), cell):
             num_ships += 1
         if self.guess_board.ship_can_occupy(Battleship(), cell):
             num_ships += 1
+        if self.guess_board.ship_can_occupy(Cruiser(), cell):
+            num_ships += 1
+        if self.guess_board.ship_can_occupy(Destroyer(), cell):
+            num_ships += 1
         if self.guess_board.ship_can_occupy(Submarine(), cell):
-            num_ships += 2 # Destroyer is same size
-        if self.guess_board.ship_can_occupy(PatrolBoat(), cell):
             num_ships += 1
         self.prob_map[cell] = num_ships
-
 
     def _easy_guess(self) -> Coordinate:
         return self.unguessed.random()
@@ -133,10 +123,33 @@ class ComputerPlayer(Player):
             return self._med_guess()
 
     def _init_prob_map(self):
+        """
+        Initialize a dict of {Coordinate : Prossible Ships} where Prossible Ships is 
+            the number of ships that can occupy a given cell
+        """
         if self.difficulty != Difficulty.HARD:
-            return
+            return None
+        prob_map = dict()
         coords = [Coordinate(x, y)
                for x in range(BOARD_SIZE)
                for y in range(BOARD_SIZE)]
         for c in coords:
-            self.prob_map[c] = MAX_SHIP_SIZE
+            prob_map[c] = MAX_SHIP_SIZE
+        return prob_map
+
+    def _place_ship(self, ship: Ship) -> Ship:
+        """
+        Place a ship in a random location.
+        """
+        while True:
+            coor = Coordinate(
+                    random.randint(0, BOARD_SIZE - 1),
+                    random.randint(0, BOARD_SIZE - 1)
+                    )
+            orient = random.choice(
+                    [Orientation.VERTICAL, Orientation.HORIZONTAL]
+                    )
+            if ship.place(self.ships, orient, coor):
+                break
+        return ship
+

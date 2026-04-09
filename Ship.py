@@ -13,14 +13,6 @@ class Ship(object):
         self.hits = 0
         self.occupied: list[Coordinate] = None
 
-    def _can_occupy(self, ships: list) -> bool:
-        for ship in ships:
-            for coor in ship.occupied:
-                if self.occupies(coor):
-                    return False
-        return True
-    
-    # TODO do something more efficient
     def place(self, ships: list,
               orientation: Orientation,
               origin: Coordinate) -> bool:
@@ -51,28 +43,37 @@ class Ship(object):
             return True
         return False
 
+    def _can_occupy(self, ships: list) -> bool:
+        for ship in ships:
+            for coor in ship.occupied:
+                if self.occupies(coor):
+                    return False
+        return True
+
     def __hash__(self) -> int:
         return hash(self.name) + self.sid
 
 
 class AircraftCarrier(Ship):
-    def __init__(self, sid: int):
+    # Temporary ships can have default sid=0, persistent ships need a unique
+    # id for hashing
+    def __init__(self, sid: int = 0):
         super().__init__(sid, "Aircraft Carrier", 5)
 
 class Battleship(Ship):
-    def __init__(self, sid: int):
+    def __init__(self, sid: int = 0):
         super().__init__(sid, "Battleship", 4)
 
 class Cruiser(Ship):
-    def __init__(self, sid: int):
+    def __init__(self, sid: int = 0):
         super().__init__(sid, "Cruiser", 3)
 
 class Destroyer(Ship):
-    def __init__(self, sid: int):
+    def __init__(self, sid: int = 0):
         super().__init__(sid, "Destroyer", 2)
 
 class Submarine(Ship):
-    def __init__(self, sid: int):
+    def __init__(self, sid: int = 0):
         super().__init__(sid, "Submarine", 1)
 
 @dataclass
@@ -80,5 +81,3 @@ class AttackResult:
     hit:  bool
     sunk: bool
     ship: Ship
-    def __hash__(self):
-        return hash(ship.name)
