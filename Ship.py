@@ -1,4 +1,4 @@
-from util import BOARD_SIZE, Orientation, Coordinate
+from util import BOARD_SIZE, Coordinate, Orientation
 from dataclasses import dataclass
 
 """

@@ -48,7 +48,7 @@ def client_mode(ip: str = '127.0.0.1', port: int = 8888):
     clnt = BattleshipClient(ip, port)
     clnt.start()
 
-def simulation_mode(diffs: str):
+def simulation_mode(diffs: str, display: bool):
     if len(diffs) != 2:
         print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
         exit(1)
@@ -59,7 +59,15 @@ def simulation_mode(diffs: str):
         exit(1)
     p1              = ComputerPlayer(p1_diff)
     p2              = ComputerPlayer(p2_diff)
-    gameManager     = GameManager(p1, p2, SimulationDisplayer())
+    if display:
+        displayer   = Displayer(
+                opp_board=p2.guess_board,
+                player_board=p1.guess_board,
+                ships=p1.ships
+        )
+    else:
+        displayer   = SimulationDisplayer()
+    gameManager     = GameManager(p1, p2, displayer)
 
     if gameManager.start() == p1:
         print(f"Player one won (on turn {gameManager.cur_turn})!")
@@ -123,13 +131,18 @@ def main():
         type=str,
         help="Server IP address to connect to."
     )
+    parser.add_argument(
+        "--display",
+        action="store_true",
+        help="In simulation mode, display the game board"
+    )
 
     args = parser.parse_args()
 
     # Can only run in one of default, server, and client modes
     
     if args.simulation:
-        simulation_mode(args.simulation)
+        simulation_mode(args.simulation, args.display)
         exit(0)
 
     if args.default + args.server + args.client > 1:

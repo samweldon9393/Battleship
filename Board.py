@@ -11,17 +11,18 @@ class Board(object):
 
     def get_cell(self, coor: Coordinate) -> CellState:
         """
-        Wraps matrix access with bounds checking
+        Returns the state of the cell at coor
         """
-        if not (0 <= coor.row < BOARD_SIZE) or not (0 <= coor.col < BOARD_SIZE):
-            return CellState.INVALID
+        # Bounds checking handled in Coordinate constructor
+        if not coor.is_valid():
+            raise IndexError("Invalid Coordinate")
         return self.cell_grid[coor.row][coor.col]
 
     def update(self, coor: Coordinate, state: CellState):
         """
         Updates cell at coor to state
         """
-        if not (0 <= coor.row < BOARD_SIZE) or not (0 <= coor.col < BOARD_SIZE):
+        if not coor.is_valid():
             raise IndexError("Invalid Coordinate")
         self.cell_grid[coor.row][coor.col] = state
 

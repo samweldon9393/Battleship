@@ -1,7 +1,7 @@
 from Displayer import Displayer
 from HumanPlayer import HumanPlayer
 from Ship import Ship
-from util import BOARD_SIZE, Coordinate, Orientation, send_msg, recv_msg
+from util import BOARD_SIZE, Coordinate, Orientation, recv_msg, send_msg
 
 import socket
 

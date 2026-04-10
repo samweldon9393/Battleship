@@ -20,9 +20,9 @@ class HumanPlayer(Player):
                 x, y = move.split(' ')
                 x = x.upper()
                 y = int(y)
-                if not 0 < y <= BOARD_SIZE or x not in Coordinate.rows:
-                    raise Exception("Invalid cell input (must be form [A <= row <= J, 1 <= col <= 10])")
                 coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
+            except IndexError as e:
+                print(f"Invalid entry: {e}")
             except Exception as e:
                 print(f"Move must be in the form [x y] (no brackets) {e}")
                 continue
@@ -49,6 +49,9 @@ class HumanPlayer(Player):
                 y = int(y)
                 o = o.lower()
                 coor = Coordinate(row=Coordinate.rows[x], col=y-1)
+                if not coor.is_valid():
+                    print(f"Coordinate must be [A <= row <= J, 1 <= col <= 10]")
+                    continue
             except Exception as e:
                 print(f"Move must be in the form [x y o] (no brackets) {e}")
                 continue
