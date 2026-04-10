@@ -55,13 +55,11 @@ def client_mode(ip: str = '127.0.0.1', port: int = 8888):
     clnt.start()
 
 def simulation_mode(diffs: str, display: bool):
-    if len(diffs) != 2:
-        print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
-        exit(1)
-    p1_diff = _get_difficulty(diffs[0].upper())
-    p2_diff = _get_difficulty(diffs[1].upper())
-    if p1_diff == -1 or p2_diff == -1:
-        print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
+    try:
+        p1_diff = _get_difficulty(diffs[0].upper())
+        p2_diff = _get_difficulty(diffs[1].upper())
+    except IndexError:
+        print("Usage: Battleship.py -m XX (where x is in [E|M|H])")
         exit(1)
     p1 = ComputerPlayer(p1_diff)
     p2 = ComputerPlayer(p2_diff)
@@ -92,7 +90,7 @@ def _get_difficulty(difficulty_str: str) -> Difficulty:
         case "H":
             return Difficulty.HARD
         case _:
-            return -1
+            raise IndexError("Must enter two letters from [E|M|H]")
 
 def _prompt_difficulty() -> Difficulty:
     difficulty_str  = input("Enter difficulty level [E | M | H]: ").upper()
