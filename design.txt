@@ -79,7 +79,8 @@ util.py
     * opp_board: Board
     * ships: List[Ship]
     * print_fn: Function
-    % _draw_boards_side_by_side -> None
+    % draw_boards_side_by_side -> None
+    % draw_ships -> None
     % display -> None
 
     - SimulationDisplayer(Displayer)

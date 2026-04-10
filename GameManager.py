@@ -25,9 +25,9 @@ class GameManager(object):
         """
         Main game loop
         """
-        self.displayer._draw_boards_side_by_side()
+        self.displayer.draw_boards_side_by_side()
         self._place_both_players_ships()
-        self.displayer._draw_ships()
+        self.displayer.draw_ships()
         winner = None
         while True:
             turn_result = self.turn(self.p1, self.p2)

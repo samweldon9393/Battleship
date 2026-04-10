@@ -29,7 +29,7 @@ class ClientPlayer(HumanPlayer):
         self.name = recv_msg(self.conn)
 
     def place_ships(self):
-        self.displayer._draw_boards_side_by_side()
+        self.displayer.draw_boards_side_by_side()
         super().place_ships()
 
     def take_turn(self) -> Coordinate:

@@ -20,10 +20,10 @@ class Displayer(object):
         self.print_fn       = print_fn
 
     def display(self):
-        self._draw_boards_side_by_side()
-        self._draw_ships()
+        self.draw_boards_side_by_side()
+        self.draw_ships()
 
-    def _draw_boards_side_by_side(self):
+    def draw_boards_side_by_side(self):
         GAP = "     "
         col_headers = "    " + "   ".join("1234567891"[:BOARD_SIZE]) + "0"
 
@@ -67,7 +67,7 @@ class Displayer(object):
         self.print_fn(h_line_bot + GAP + h_line_bot)
         self.print_fn("\n  X = Hit   · = Miss   S = Sunk   (blank) = Unknown\n")
 
-    def _draw_ships(self):
+    def draw_ships(self):
         self.print_fn("  YOUR SHIPS\n")
 
         # Build each ship's display block as a list of lines
@@ -98,8 +98,8 @@ class SimulationDisplayer(Displayer):
     def display(self):
         pass
 
-    def _draw_boards_side_by_side(self):
+    def draw_boards_side_by_side(self):
         pass
 
-    def _draw_ships(self):
+    def draw_ships(self):
         pass
