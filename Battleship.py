@@ -12,27 +12,8 @@ from util import send_msg, Difficulty
 
 import argparse
 
-def prompt_difficulty() -> Difficulty:
-    difficulty_str  = input("Select a difficulty level: E | M | H: ")
-    difficulty      = -1
-    while True:
-        difficulty_str = difficulty_str.upper()
-        match difficulty_str:
-            case "E":
-                difficulty = Difficulty.EASY
-                break
-            case "M":
-                difficulty = Difficulty.MEDIUM
-                break
-            case "H":
-                difficulty = Difficulty.HARD
-                break
-            case _:
-                difficulty_str = input("Must enter E | M | H: ")
-    return difficulty
-
 def single_player():
-    difficulty      = prompt_difficulty()
+    difficulty      = _prompt_difficulty()
     name            = input("Enter your name: ")
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
@@ -67,11 +48,15 @@ def client_mode(ip: str = '127.0.0.1', port: int = 8888):
     clnt = BattleshipClient(ip, port)
     clnt.start()
 
-def simulation_mode():
-    print("Computer Player 1 difficulty")
-    p1_diff         = prompt_difficulty()
-    print("Computer Player 2 difficulty")
-    p2_diff         = prompt_difficulty()
+def simulation_mode(diffs: str):
+    if len(diffs) != 2:
+        print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
+        exit(1)
+    p1_diff         = _get_difficulty(diffs[0].upper())
+    p2_diff         = _get_difficulty(diffs[1].upper())
+    if p1_diff == -1 or p2_diff == -1:
+        print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
+        exit(1)
     p1              = ComputerPlayer(p1_diff)
     p2              = ComputerPlayer(p2_diff)
     gameManager     = GameManager(p1, p2, SimulationDisplayer())
@@ -80,6 +65,25 @@ def simulation_mode():
         print(f"Player one won (on turn {gameManager.cur_turn})!")
     else:
         print(f"Player two won (on turn {gameManager.cur_turn})!")
+
+def _get_difficulty(difficulty_str: str) -> Difficulty:
+    match difficulty_str:
+        case "E":
+            return Difficulty.EASY
+        case "M":
+            return Difficulty.MEDIUM
+        case "H":
+            return Difficulty.HARD
+        case _:
+            return -1
+
+def _prompt_difficulty() -> Difficulty:
+    difficulty_str  = input("Enter difficulty level [E | M | H]").upper()
+    difficulty      = _get_difficulty(difficulty_str)
+    while difficulty == -1:
+        difficulty_str = input("Must enter E | M | H: ").upper()
+        _get_difficulty(difficulty_str)
+    return difficulty
 
 def main():
     parser = argparse.ArgumentParser(description="A command line Battleship game.")
@@ -102,7 +106,7 @@ def main():
     )
     parser.add_argument(
         "-m", "--simulation", 
-        action="store_true",
+        type=str,
         help="Run in simulation mode."
     )
     # Optional with value
@@ -120,7 +124,12 @@ def main():
     args = parser.parse_args()
 
     # Can only run in one of default, server, and client modes
-    if args.default + args.server + args.client + args.simulation > 1:
+    
+    if args.simulation:
+        simulation_mode(args.simulation)
+        exit(0)
+
+    if args.default + args.server + args.client > 1:
         print("Can only enter one of -d, -s, -c, -m")
         parser.print_help()
         exit(1)
@@ -143,9 +152,6 @@ def main():
 
     elif args.client:
         client_mode(args.ip, args.port)
-
-    elif args.simulation:
-        simulation_mode()
 
 if __name__ == '__main__':
     main()
