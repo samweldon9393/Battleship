@@ -30,13 +30,13 @@ class Player(object):
         self.ships.append(self._place_ship(Submarine(6)))
         self.ships.append(self._place_ship(Submarine(7)))
 
-    def turn_result(self, move: Coordinate, result: AttackResult):
-        if result.sunk:
-            self.guess_board.ship_sunk(result.ship)
-        elif result.hit:
-            self.guess_board.update(move, CellState.HIT)
-        else:
-            self.guess_board.update(move, CellState.MISS)
+    @abstractmethod
+    def take_turn(self) -> Coordinate:
+        """
+        Make a guess.
+        Basic game loop is p1.take_turn -> p2.take_hit -> p1.turn_result
+        """
+        pass
 
     def take_hit(self, coor: Coordinate) -> AttackResult:
         """
@@ -47,14 +47,28 @@ class Player(object):
                 return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
         return AttackResult(hit=False, sunk=False, ship=None)
 
-    @abstractmethod
-    def output(self, msg: str):
-        pass
+    def turn_result(self, move: Coordinate, result: AttackResult):
+        """
+        Update internal data structures based on result of a turn
+        """
+        if result.sunk:
+            self.guess_board.ship_sunk(result.ship)
+        elif result.hit:
+            self.guess_board.update(move, CellState.HIT)
+        else:
+            self.guess_board.update(move, CellState.MISS)
 
     @abstractmethod
-    def take_turn(self) -> Coordinate:
+    def output(self, msg: str):
+        """
+        Polymorphic output function that either prints to screen or sends
+        output over network connection
+        """
         pass
 
     @abstractmethod
     def _place_ship(self, ship: Ship) -> Coordinate:
+        """
+        Place a single ship, prompts human or random generation for computer
+        """
         pass

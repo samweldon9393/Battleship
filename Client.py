@@ -16,14 +16,14 @@ Protocol:
 """
 class BattleshipClient(object):
     def __init__(self, ip: str = '127.0.0.1', port: int = 8888):
-        s            = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, port))
-        self.conn    = s
+        self.conn = s
 
     def start(self):
         try:
             while True:
-                msg      = "  "
+                msg = "  "
                 while msg[-2:] != ": ":
                     msg  = recv_msg(self.conn)
                     print(msg, end="")

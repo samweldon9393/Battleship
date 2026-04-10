@@ -36,7 +36,8 @@ class Board(object):
         """
         Returns True if ship can occupy coor, else False
         """
-        if self.get_cell(coor) != CellState.UNKNOWN:
+        state = self.get_cell(coor)
+        if not (state == CellState.UNKNOWN or state == CellState.HIT):
             return False
         up, down, left, right = 0, 0, 0, 0
         go_up, go_down, go_left, go_right = True, True, True, True
@@ -65,4 +66,7 @@ class Board(object):
         return (up + down + 1 >= ship.size) or (left + right + 1 >= ship.size)
 
     def _init_cell_grid(self) -> list[list[CellState]]:
+        """
+        Initialzie a [BOARD_SIZE x BOARD_SIZE] matrix, all cells start unknown
+        """
         return [[CellState.UNKNOWN] * BOARD_SIZE for _ in range(BOARD_SIZE)]

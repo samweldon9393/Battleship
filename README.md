@@ -10,6 +10,7 @@ A command-line Battleship game written in Python, supporting single-player, mult
 - **Multiplayer** — play against another human over a TCP connection, with one player hosting as the server and the other joining as the client
 - **Simulation** — two computer players face off; useful for testing AI strategies
 - **Three AI difficulty levels** — Easy (random), Medium (hunt/target), Hard (probability-density map)
+- **AI Strategy Source** - http://www.datagenetics.com/blog/december32011/
 
 ---
 
@@ -83,17 +84,18 @@ To find your local IP address:
 
 ### Simulation
 
-Two computer players compete automatically. You will be prompted to choose a difficulty level for each player. Useful for observing and testing AI behaviour.
+Two computer players compete automatically. Useful for testing AI behaviour and comparing AI strategies.
 
 ```bash
-./Battleship.py -m
+./Battleship.py -m eh # Easy mode AI vs. Hard mode AI
+./Battleship.py -m mm # Medium mode AI vs. Medium mode AI
 ```
 
 ---
 
 ## Ships
 
-The fleet consists of seven ships (2x Destroyer & Submarine):
+The fleet consists of seven ships (2x Destroyer & 2x Submarine):
 
 | Ship | Size |
 |------|------|

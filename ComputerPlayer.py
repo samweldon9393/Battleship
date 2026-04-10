@@ -10,6 +10,8 @@ ComputerPlayer: A class that contains the logic to play Battleship on
     various difficulty levels:
         EASY    - Completely random guessing
         Medium  - Random guessing until hit, then search nearby
+        Hard    - Guess based on probability-density map until hit,
+                    then search nearby
 
 Strategy Source: http://www.datagenetics.com/blog/december32011/
 """
@@ -34,28 +36,28 @@ class ComputerPlayer(Player):
         self.unguessed.remove(move)
         return move
 
-    def turn_result(self, move: Coordinate, rslt: AttackResult):
-        super().turn_result(move, rslt)
+    def turn_result(self, move: Coordinate, result: AttackResult):
+        super().turn_result(move, result)
         match self.difficulty:
             case Difficulty.EASY:
                 # Always random guessing so no need to track results
                 return
             case Difficulty.MEDIUM:
-                self._turn_result_med(move, rslt)
+                self._turn_result_med(move, result)
                 return
             case Difficulty.HARD:
-                self._turn_result_hard(move, rslt)
+                self._turn_result_hard(move, result)
                 return
 
-    def _turn_result_med(self, move: Coordinate, rslt: AttackResult):
+    def _turn_result_med(self, move: Coordinate, result: AttackResult):
         """
         Update targets stack and current mode based on a turn result
         """
-        if not rslt.hit:
+        if not result.hit:
             return
-        if rslt.sunk:
-            if rslt.ship in self.hit_ships:
-                self.hit_ships.remove(rslt.ship)
+        if result.sunk:
+            if result.ship in self.hit_ships:
+                self.hit_ships.remove(result.ship)
             # If we hit multiple ships while in TARGET mode
             # Don't clear targets and switch to HUNT yet
             if len(self.hit_ships) > 0:
@@ -65,7 +67,7 @@ class ComputerPlayer(Player):
             return
         else: # move was a hit, and the ship isn't sunk yet
             self.mode = Modes.TARGET
-            self.hit_ships.add(rslt.ship)
+            self.hit_ships.add(result.ship)
             new_targets = [
                     Coordinate(i, j)
                     for i in range(move.row - 1, move.row + 2)
@@ -77,20 +79,20 @@ class ComputerPlayer(Player):
                 if t in self.unguessed and t not in self.targets:
                     self.targets.append(t)
 
-    def _turn_result_hard(self, move: Coordinate, rslt: AttackResult):
+    def _turn_result_hard(self, move: Coordinate, result: AttackResult):
         """
         Update probability map, target stack, and mode based on a turn result
         """
         for i in range(MAX_SHIP_SIZE):
-            self._update_prob_map(Coordinate(col=move.row+i, row=move.col), rslt)
+            self._update_prob_map(Coordinate(col=move.row+i, row=move.col), result)
             if i == 0:
                 continue # don't do the same thing 4 times
-            self._update_prob_map(Coordinate(col=move.row-i, row=move.col), rslt)
-            self._update_prob_map(Coordinate(col=move.row, row=move.col+i), rslt)
-            self._update_prob_map(Coordinate(col=move.row, row=move.col-i), rslt)
-        self._turn_result_med(move, rslt)
+            self._update_prob_map(Coordinate(col=move.row-i, row=move.col), result)
+            self._update_prob_map(Coordinate(col=move.row, row=move.col+i), result)
+            self._update_prob_map(Coordinate(col=move.row, row=move.col-i), result)
+        self._turn_result_med(move, result)
 
-    def _update_prob_map(self, cell: Coordinate, rslt: AttackResult):
+    def _update_prob_map(self, cell: Coordinate, result: AttackResult):
         num_ships = 0
         if self.guess_board.ship_can_occupy(AircraftCarrier(), cell):
             num_ships += 1

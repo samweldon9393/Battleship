@@ -62,22 +62,22 @@ class GameManager(object):
         move = player.take_turn()
 
         # That guess is sent to the other player, who replies with a result
-        attk_rslt = opp.take_hit(move)
+        attk_result = opp.take_hit(move)
 
         # That result is then relayed to the first player to record
-        player.turn_result(move, attk_rslt)
+        player.turn_result(move, attk_result)
 
         output = f"{player.name} guessed [{Coordinate.inds[move.row]}, {move.col + 1}]. "
-        if attk_rslt.hit:
-            if attk_rslt.sunk:
-                output += f"{player.name} sunk {opp.name}'s {attk_rslt.ship.name}\n"
+        if attk_result.hit:
+            if attk_result.sunk:
+                output += f"{player.name} sunk {opp.name}'s {attk_result.ship.name}\n"
                 # Update num ships left here as it makes formatting output easy
                 opp.ships_left -= 1
                 if opp.ships_left == 0:
                     output += f"{player.name} wins (on turn {self.cur_turn})!\n"
                     return (True, output)
             else:
-                output += f"{player.name} hit {opp.name}'s {attk_rslt.ship.name}\n"
+                output += f"{player.name} hit {opp.name}'s {attk_result.ship.name}\n"
         else:
             output += f"{player.name} miss\n"
         return (False, output)
