@@ -98,8 +98,8 @@ def _prompt_difficulty() -> Difficulty:
     difficulty_str  = input("Enter difficulty level [E | M | H]: ").upper()
     difficulty      = _get_difficulty(difficulty_str)
     while difficulty == -1:
-        difficulty_str = input("Must enter E | M | H: ").upper()
-        _get_difficulty(difficulty_str)
+        difficulty_str  = input("Must enter E | M | H: ").upper()
+        difficulty      = _get_difficulty(difficulty_str)
     return difficulty
 
 def main():
