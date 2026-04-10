@@ -97,17 +97,20 @@ def main():
     parser.add_argument(
         "-s", "--server", 
         action="store_true",
-        help="Run in mutli-player server mode."
+        help="Run in mutli-player server mode. "
+        "Must enter port number to host on."
     )
     parser.add_argument(
         "-c", "--client", 
         action="store_true",
-        help="Run in mutli-player client mode."
+        help="Run in mutli-player client mode. "
+        "Must enter ip address and port number to connect to."
     )
     parser.add_argument(
         "-m", "--simulation", 
         type=str,
-        help="Run in simulation mode."
+        help="Run in simulation mode. "
+        "Must enter difficulty level for both players."
     )
     # Optional with value
     parser.add_argument(
