@@ -22,6 +22,7 @@ class ComputerPlayer(Player):
         self.mode       = Modes.HUNT
         self.targets    = list()
         self.hit_ships  = set() # We might hit a second ship while in TARGET mode
+        self.sunk_ships = set() # Keep track for prob_map
         self.prob_map   = self._init_prob_map()
 
     def take_turn(self) -> Coordinate:
@@ -58,6 +59,7 @@ class ComputerPlayer(Player):
         if result.sunk:
             if result.ship in self.hit_ships:
                 self.hit_ships.remove(result.ship)
+                self.sunk_ships.add(result.ship)
             # If we hit multiple ships while in TARGET mode
             # Don't clear targets and switch to HUNT yet
             if len(self.hit_ships) > 0:
@@ -84,27 +86,29 @@ class ComputerPlayer(Player):
         Update probability map, target stack, and mode based on a turn result
         """
         for i in range(MAX_SHIP_SIZE):
-            self._update_prob_map(Coordinate(col=move.row+i, row=move.col), result)
+            self._update_prob_map(Coordinate(col=move.row+i, row=move.col))
             if i == 0:
                 continue # don't do the same thing 4 times
-            self._update_prob_map(Coordinate(col=move.row-i, row=move.col), result)
-            self._update_prob_map(Coordinate(col=move.row, row=move.col+i), result)
-            self._update_prob_map(Coordinate(col=move.row, row=move.col-i), result)
+            self._update_prob_map(Coordinate(col=move.row-i, row=move.col))
+            self._update_prob_map(Coordinate(col=move.row, row=move.col+i))
+            self._update_prob_map(Coordinate(col=move.row, row=move.col-i))
         self._turn_result_med(move, result)
 
-    def _update_prob_map(self, cell: Coordinate, result: AttackResult):
-        num_ships = 0
-        if self.guess_board.ship_can_occupy(AircraftCarrier(), cell):
-            num_ships += 1
-        if self.guess_board.ship_can_occupy(Battleship(), cell):
-            num_ships += 1
-        if self.guess_board.ship_can_occupy(Cruiser(), cell):
-            num_ships += 1
-        if self.guess_board.ship_can_occupy(Destroyer(), cell):
-            num_ships += 1
-        if self.guess_board.ship_can_occupy(Submarine(), cell):
-            num_ships += 1
-        self.prob_map[cell] = num_ships
+    def _update_prob_map(self, cell: Coordinate):
+        ships = [
+                AircraftCarrier(),
+                Battleship(),
+                Cruiser(),
+                Destroyer(),
+                Destroyer(1),
+                Submarine(),
+                Submarine(1)
+                ]
+        for ship in ships:
+            if (ship in self.sunk_ships 
+                or not self.guess_board.ship_can_occupy(ship, cell)):
+                ships.remove(ship)
+        self.prob_map[cell] = len(ships)
 
     def _easy_guess(self) -> Coordinate:
         return self.unguessed.random()

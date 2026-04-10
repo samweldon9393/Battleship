@@ -22,13 +22,13 @@ class Player(object):
         Place all 5 ships with _place_ship abstractmethod that handles 
         getting client input or generating locations for ComputerPlayers.
         """
-        self.ships.append(self._place_ship(AircraftCarrier(1)))
-        self.ships.append(self._place_ship(Battleship(2)))
-        self.ships.append(self._place_ship(Cruiser(3)))
-        self.ships.append(self._place_ship(Destroyer(4)))
-        self.ships.append(self._place_ship(Destroyer(5)))
-        self.ships.append(self._place_ship(Submarine(6)))
-        self.ships.append(self._place_ship(Submarine(7)))
+        self.ships.append(self._place_ship(AircraftCarrier()))
+        self.ships.append(self._place_ship(Battleship()))
+        self.ships.append(self._place_ship(Cruiser()))
+        self.ships.append(self._place_ship(Destroyer()))
+        self.ships.append(self._place_ship(Destroyer(1))) # Differentiate 2 Destroyers
+        self.ships.append(self._place_ship(Submarine()))
+        self.ships.append(self._place_ship(Submarine(1)))
 
     @abstractmethod
     def take_turn(self) -> Coordinate:
