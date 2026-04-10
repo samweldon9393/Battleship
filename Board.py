@@ -3,7 +3,7 @@ from Ship import Ship
 
 """
 Board: Represents player B's board from the perspective of player A.
-    The class is a thin wrapper on a matrix (list[list[CellState]]).
+    The class is a wrapper on a matrix (list[list[CellState]]).
 """
 class Board(object):
     def __init__(self):
@@ -11,9 +11,7 @@ class Board(object):
 
     def get_cell(self, coor: Coordinate) -> CellState:
         """
-        Coordinates are used elsewhere in the form (col, row), as it is more
-        natural with the [letter, number] format, so in the Board class, that
-        is corrected to (row, col) to work with the data structure properly
+        Wraps matrix access with bounds checking
         """
         if not (0 <= coor.row < BOARD_SIZE) or not (0 <= coor.col < BOARD_SIZE):
             return CellState.INVALID
@@ -23,6 +21,8 @@ class Board(object):
         """
         Updates cell at coor to state
         """
+        if not (0 <= coor.row < BOARD_SIZE) or not (0 <= coor.col < BOARD_SIZE):
+            raise IndexError("Invalid Coordinate")
         self.cell_grid[coor.row][coor.col] = state
 
     def ship_sunk(self, ship: Ship):

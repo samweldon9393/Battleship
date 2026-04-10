@@ -1,5 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass
+import random
 
 MAX_SHIP_SIZE   = 5
 TOTAL_SHIPS     = 5
@@ -38,6 +39,36 @@ class Difficulty(Enum):
 class Modes(Enum):
     HUNT    = 0
     TARGET  = 1
+
+class Unguessed(object):
+    """
+    A simple container class that wraps a list and a set.
+    Allows O(1) membership testing and fast random choices (as python
+    sets don't implement random.choice)
+    """
+    def __init__(self):
+        """
+        All possible coordinates are generated
+        """
+        self._list = [Coordinate(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE)]
+        self._set  = set(self._list)
+
+    def __contains__(self, c: Coordinate):
+        return c in self._set
+
+    def __len__(self):
+        return len(self._list)
+
+    def remove(self, c: Coordinate):
+        if c not in self:
+            raise KeyError(f"{c} not in Unguessed")
+        self._list.remove(c)
+        self._set.remove(c)
+
+    def random(self):
+        if len(self) == 0:
+            raise IndexError("Empty Unguessed")
+        return random.choice(self._list)
 
 #=============================================================================#
 #                           Networking Utilities                              #

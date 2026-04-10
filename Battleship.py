@@ -78,7 +78,7 @@ def _get_difficulty(difficulty_str: str) -> Difficulty:
             return -1
 
 def _prompt_difficulty() -> Difficulty:
-    difficulty_str  = input("Enter difficulty level [E | M | H]").upper()
+    difficulty_str  = input("Enter difficulty level [E | M | H]: ").upper()
     difficulty      = _get_difficulty(difficulty_str)
     while difficulty == -1:
         difficulty_str = input("Must enter E | M | H: ").upper()
@@ -147,7 +147,7 @@ def main():
         parser.print_help()
         exit(1)
 
-    if args.default or (args.server + args.client + args.simulation) == 0:
+    if args.default or (args.server + args.client) == 0:
         single_player()
 
     elif args.server:

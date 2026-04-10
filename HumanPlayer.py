@@ -1,7 +1,7 @@
 from Displayer import Displayer
 from Player import Player
 from Ship import AttackResult, Ship
-from util import BOARD_SIZE, Coordinate, Orientation
+from util import BOARD_SIZE, Coordinate, Orientation, Unguessed
 
 """
 HumanPlayer: Maintain's game state for a player and handles I/O
@@ -20,13 +20,17 @@ class HumanPlayer(Player):
                 x, y = move.split(' ')
                 x = x.upper()
                 y = int(y)
-                if not 0 < y <= BOARD_SIZE:
-                    raise Exception("Invalid cell input (must be 0 < row <= 10")
+                if not 0 < y <= BOARD_SIZE or x not in Coordinate.rows:
+                    raise Exception("Invalid cell input (must be form [A <= row <= J, 1 <= col <= 10])")
                 coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
             except Exception as e:
                 print(f"Move must be in the form [x y] (no brackets) {e}")
                 continue
-            break
+            if move in self.unguessed:
+                self.unguessed.remove(move)
+                break
+            else:
+                print("Cannot repeat moves")
         return coor
 
     def output(self, msg: str):

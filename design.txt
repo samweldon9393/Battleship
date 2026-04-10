@@ -34,8 +34,6 @@ util.py
         - Submarine(Ship)       size=1
 
 - Board
-    """ Each player has a board representing their own ships and what 
-    they know about their opponent's ships """
     * cell_grid: List[List[CellState]]
     % get_cell -> CellState
     % update

@@ -1,7 +1,8 @@
 from Displayer import Displayer
 from Player import Player
 from Ship import AttackResult, AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Ship
-from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, MAX_SHIP_SIZE, Modes
+from util import BOARD_SIZE, CellState, Coordinate, Difficulty, Orientation, MAX_SHIP_SIZE, Modes, Unguessed
+
 import random
 
 """
@@ -22,13 +23,16 @@ class ComputerPlayer(Player):
         self.prob_map   = self._init_prob_map()
 
     def take_turn(self) -> Coordinate:
+        move = None
         match self.difficulty:
             case Difficulty.EASY:
-                return self._easy_guess()
+                move = self._easy_guess()
             case Difficulty.MEDIUM:
-                return self._med_guess()
+                move = self._med_guess()
             case Difficulty.HARD:
-                return self._hard_guess()
+                move = self._hard_guess()
+        self.unguessed.remove(move)
+        return move
 
     def turn_result(self, move: Coordinate, rslt: AttackResult):
         super().turn_result(move, rslt)
