@@ -1,5 +1,5 @@
 from Board import Board
-from Displayer import Displayer
+from Displayer import Displayer, NullDisplayer
 from abc import abstractmethod
 from util import BOARD_SIZE, CellState, Coordinate, TOTAL_SHIPS, Unguessed
 from Ship import AttackResult, AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Ship
@@ -16,6 +16,7 @@ class Player(object):
         self.ships       = list()        # Player's own ships
         self.ships_left  = TOTAL_SHIPS
         self.unguessed   = Unguessed()
+        self.displayer   = NullDisplayer()
 
     def place_ships(self):
         """"
@@ -57,6 +58,9 @@ class Player(object):
             self.guess_board.update(move, CellState.HIT)
         else:
             self.guess_board.update(move, CellState.MISS)
+
+    def register_displayer(self, displayer: Displayer):
+        self.displayer = displayer
 
     @abstractmethod
     def output(self, msg: str):

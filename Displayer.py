@@ -90,7 +90,7 @@ class Displayer(object):
         self.print_fn(col_gap + col_gap.join(b[1] for b in blocks))
         self.print_fn("")
 
-class SimulationDisplayer(Displayer):
+class NullDisplayer(Displayer):
     def __init__(self):
         super().__init__()
         self.print_fn = lambda a : print("", end="")

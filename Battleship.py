@@ -3,7 +3,7 @@
 from Board import Board
 from Client import BattleshipClient
 from ComputerPlayer import ComputerPlayer
-from Displayer import Displayer, SimulationDisplayer
+from Displayer import Displayer, NullDisplayer
 from GameManager import GameManager
 from HumanPlayer import HumanPlayer
 from Player import Player
@@ -18,30 +18,36 @@ def single_player():
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
     displayer       = Displayer(
-            opp_board=computer.guess_board,
-            player_board=human.guess_board,
-            ships=human.ships
+        opp_board       = computer.guess_board,
+        player_board    = human.guess_board,
+        ships           = human.ships
     )
-    gameManager     = GameManager(human, computer, displayer)
+    human.register_displayer(displayer)
+    gameManager     = GameManager(human, computer)
 
     gameManager.start()
 
 def server_mode(port: int):
     name            = input("Enter your name: ")
     server_player   = HumanPlayer(name=name)
-    server_displayer   = Displayer(
-            player_board=server_player.guess_board,
-            ships=server_player.ships,
+    client_player   = ClientPlayer(port=port)
+
+    server_displayer = Displayer(
+        player_board    = server_player.guess_board,
+        opp_board       = client_player.guess_board,
+        ships           = server_player.ships
+    )
+    client_displayer = Displayer(
+        opp_board       = server_player.guess_board,
+        player_board    = client_player.guess_board,
+        ships           = client_player.ships,
+        print_fn        = lambda msg : send_msg(client_player.conn, msg+'\n')
     )
 
-    client_player   = ClientPlayer(displayer=Displayer(), port=port)
-    server_displayer.opp_board              = client_player.guess_board
-    client_player.displayer.opp_board       = server_player.guess_board
-    client_player.displayer.player_board    = client_player.guess_board
-    client_player.displayer.ships           = client_player.ships
-    client_player.displayer.print_fn        = lambda msg : send_msg(client_player.conn, msg+'\n')
+    server_player.register_displayer(server_displayer)
+    client_player.register_displayer(client_displayer)
 
-    gameManager     = GameManager(server_player, client_player, server_displayer)
+    gameManager = GameManager(server_player, client_player)
     gameManager.start()
 
 def client_mode(ip: str = '127.0.0.1', port: int = 8888):
@@ -52,22 +58,25 @@ def simulation_mode(diffs: str, display: bool):
     if len(diffs) != 2:
         print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
         exit(1)
-    p1_diff         = _get_difficulty(diffs[0].upper())
-    p2_diff         = _get_difficulty(diffs[1].upper())
+    p1_diff = _get_difficulty(diffs[0].upper())
+    p2_diff = _get_difficulty(diffs[1].upper())
     if p1_diff == -1 or p2_diff == -1:
         print("Usage: Battleship.py -m XX (where x can be [E|M|H])")
         exit(1)
-    p1              = ComputerPlayer(p1_diff)
-    p2              = ComputerPlayer(p2_diff)
+    p1 = ComputerPlayer(p1_diff)
+    p2 = ComputerPlayer(p2_diff)
+
     if display:
-        displayer   = Displayer(
-                opp_board=p2.guess_board,
-                player_board=p1.guess_board,
-                ships=p1.ships
+        displayer = Displayer(
+            opp_board       = p2.guess_board,
+            player_board    = p1.guess_board,
+            ships           = p1.ships
         )
     else:
-        displayer   = SimulationDisplayer()
-    gameManager     = GameManager(p1, p2, displayer)
+        displayer   = NullDisplayer()
+    p1.register_displayer(displayer)
+
+    gameManager     = GameManager(p1, p2)
 
     if gameManager.start() == p1:
         print(f"Player one won (on turn {gameManager.cur_turn})!")

@@ -14,37 +14,36 @@ class GameManager(object):
     def __init__(self,
                  p1: Player,
                  p2: Player,
-                 displayer: Displayer
                  ):
         self.p1         = p1
         self.p2         = p2
         self.cur_turn   = 1
-        self.displayer  = displayer
 
     def start(self) -> Player:
         """
         Main game loop
         """
-        self.displayer.draw_boards_side_by_side()
+        self.p1.displayer.draw_boards_side_by_side()
+        self.p2.displayer.draw_boards_side_by_side()
         self._place_both_players_ships()
-        self.displayer.draw_ships()
+        self.p1.displayer.draw_ships()
+        self.p2.displayer.draw_ships()
         winner = None
         while True:
-            turn_result = self.turn(self.p1, self.p2)
-            output      = turn_result[1]
-            if turn_result[0]:
+            game_over, output = self.turn(self.p1, self.p2)
+            if game_over:
                 self.p1.output(output)
                 self.p2.output(output)
                 winner = self.p1
                 break
-            turn_result = self.turn(self.p2, self.p1)
-            output      += turn_result[1]
-            if turn_result[0]:
+            game_over, output = self.turn(self.p2, self.p1)
+            if game_over:
                 self.p1.output(output)
                 self.p2.output(output)
                 winner = self.p2
                 break
-            self.displayer.display()
+            self.p1.displayer.display()
+            self.p2.displayer.display()
             self.p1.output(output)
             self.p2.output(output)
             self.cur_turn += 1

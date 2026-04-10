@@ -13,7 +13,6 @@ ClientPlayer: A HumanPlayer with networking added. The client side of the
 """
 class ClientPlayer(HumanPlayer):
     def __init__(self,
-                 displayer: Displayer,
                  port: int = 8888,
                  name: str = "Human"):
         super().__init__(name=name)
@@ -23,12 +22,15 @@ class ClientPlayer(HumanPlayer):
         s.bind(('', port))
         s.listen()
         self.conn, self.addr = s.accept()               # blocks until client connects
-        self.displayer = displayer
         
         send_msg(self.conn, "Enter your name: ")
         self.name = recv_msg(self.conn)
 
     def place_ships(self):
+        """
+        The server is responsible for the client's display, so invokes
+        the displayer when needed.
+        """
         self.displayer.draw_boards_side_by_side()
         super().place_ships()
 
