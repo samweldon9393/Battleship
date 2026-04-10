@@ -26,8 +26,8 @@ class HumanPlayer(Player):
             except Exception as e:
                 print(f"Move must be in the form [x y] (no brackets) {e}")
                 continue
-            if move in self.unguessed:
-                self.unguessed.remove(move)
+            if coor in self.unguessed:
+                self.unguessed.remove(coor)
                 break
             else:
                 print("Cannot repeat moves")
