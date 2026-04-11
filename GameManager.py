@@ -36,7 +36,8 @@ class GameManager(object):
                 self.p2.output(output)
                 winner = self.p1
                 break
-            game_over, output = self.turn(self.p2, self.p1)
+            game_over, more_output = self.turn(self.p2, self.p1)
+            output += more_output
             if game_over:
                 self.p1.output(output)
                 self.p2.output(output)

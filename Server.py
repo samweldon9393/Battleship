@@ -26,19 +26,10 @@ class ClientPlayer(HumanPlayer):
         send_msg(self.conn, "Enter your name: ")
         self.name = recv_msg(self.conn)
 
-    def place_ships(self):
-        """
-        The server is responsible for the client's display, so invokes
-        the displayer when needed.
-        """
-        self.displayer.draw_boards_side_by_side()
-        super().place_ships()
-
     def take_turn(self) -> Coordinate:
         """
         Prompts user for a cell to strike. Returns the input Coordinate.
         """
-        self.displayer.display()
         while True:
             send_msg(self.conn, "Your move, enter [x y] (no brackets): ")
             move = recv_msg(self.conn)
@@ -52,8 +43,8 @@ class ClientPlayer(HumanPlayer):
             except Exception as e:
                 send_msg(self.conn, f"Move must be in the form [x y] (no brackets) {e}")
                 continue
-            if move in self.unguessed:
-                self.unguessed.remove(move)
+            if coor in self.unguessed:
+                self.unguessed.remove(coor)
                 break
             else:
                 send_msg(self.conn, "Cannot repeat moves")

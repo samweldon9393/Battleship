@@ -1,12 +1,10 @@
 #!/bin/env python3
 
-from Board import Board
 from Client import BattleshipClient
 from ComputerPlayer import ComputerPlayer
 from Displayer import Displayer, NullDisplayer
 from GameManager import GameManager
 from HumanPlayer import HumanPlayer
-from Player import Player
 from Server import ClientPlayer
 from util import send_msg, Difficulty
 
@@ -23,8 +21,8 @@ def single_player():
         ships           = human.ships
     )
     human.register_displayer(displayer)
-    gameManager     = GameManager(human, computer)
 
+    gameManager     = GameManager(human, computer)
     gameManager.start()
 
 def server_mode(port: int):
@@ -74,8 +72,7 @@ def simulation_mode(diffs: str, display: bool):
         displayer   = NullDisplayer()
     p1.register_displayer(displayer)
 
-    gameManager     = GameManager(p1, p2)
-
+    gameManager = GameManager(p1, p2)
     if gameManager.start() == p1:
         print(f"Player one won (on turn {gameManager.cur_turn})!")
     else:
@@ -146,16 +143,15 @@ def main():
 
     args = parser.parse_args()
 
-    # Can only run in one of default, server, and client modes
-    
-    if args.simulation:
-        simulation_mode(args.simulation, args.display)
-        exit(0)
-
-    if args.default + args.server + args.client > 1:
+    # Can only run in one of default, simulation, server, or client modes
+    if args.default + args.server + args.client + bool(args.simulation) > 1:
         print("Can only enter one of -d, -s, -c, -m")
         parser.print_help()
         exit(1)
+
+    if args.simulation:
+        simulation_mode(args.simulation, args.display)
+        exit(0)
 
     if args.server and (not args.port or args.ip):
         print("Must enter a port number to host server on")
