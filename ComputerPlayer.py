@@ -109,6 +109,7 @@ class ComputerPlayer(Player):
                 if (ship in self.sunk_ships 
                     or not self.guess_board.ship_can_occupy(ship, cell)):
                     ships.remove(ship)
+            # Skip any ships that go out of bounds
             except IndexError:
                 continue
         self.prob_map[cell] = len(ships)
