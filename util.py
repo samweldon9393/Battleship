@@ -4,7 +4,7 @@ import random
 
 BOARD_SIZE    = 10
 MAX_SHIP_SIZE = 5
-TOTAL_SHIPS   = 5
+TOTAL_SHIPS   = 7
 
 #=============================================================================#
 #                               Game Utilities                                #
