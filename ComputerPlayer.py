@@ -105,9 +105,12 @@ class ComputerPlayer(Player):
                 Submarine(1)
                 ]
         for ship in ships:
-            if (ship in self.sunk_ships 
-                or not self.guess_board.ship_can_occupy(ship, cell)):
-                ships.remove(ship)
+            try:
+                if (ship in self.sunk_ships 
+                    or not self.guess_board.ship_can_occupy(ship, cell)):
+                    ships.remove(ship)
+            except IndexError:
+                continue
         self.prob_map[cell] = len(ships)
 
     def _easy_guess(self) -> Coordinate:

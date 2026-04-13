@@ -23,30 +23,26 @@ class GameManager(object):
         """
         Main game loop
         """
-        self.p1.displayer.draw_boards_side_by_side()
-        self.p2.displayer.draw_boards_side_by_side()
+        self._draw_boards_side_by_side()
         self._place_both_players_ships()
-        self.p1.displayer.draw_ships()
-        self.p2.displayer.draw_ships()
+        self._draw_ships()
         winner = None
         while True:
             game_over, output = self.turn(self.p1, self.p2)
             if game_over:
-                self.p1.output(output)
-                self.p2.output(output)
+                self._display()
+                self._output(output)
                 winner = self.p1
                 break
             game_over, more_output = self.turn(self.p2, self.p1)
             output += more_output
             if game_over:
-                self.p1.output(output)
-                self.p2.output(output)
+                self._display()
+                self._output(output)
                 winner = self.p2
                 break
-            self.p1.displayer.display()
-            self.p2.displayer.display()
-            self.p1.output(output)
-            self.p2.output(output)
+            self._display()
+            self._output(output)
             self.cur_turn += 1
         return winner
 
@@ -82,6 +78,22 @@ class GameManager(object):
             output += f"{player.name} miss\n"
         return (False, output)
 
+    def _output(self, output: str):
+        self.p1.output(output)
+        self.p2.output(output)
+
+    def _display(self):
+        self.p1.displayer.display()
+        self.p2.displayer.display()
+
+    def _draw_boards_side_by_side(self):
+        self.p1.displayer.draw_boards_side_by_side()
+        self.p2.displayer.draw_boards_side_by_side()
+
+    def _draw_ships(self):
+        self.p1.displayer.draw_ships()
+        self.p2.displayer.draw_ships()
+
     def _place_both_players_ships(self):
         """
         Place all ships for both players concurrently
@@ -92,4 +104,3 @@ class GameManager(object):
         t2.start()
         t1.join()
         t2.join()
-
