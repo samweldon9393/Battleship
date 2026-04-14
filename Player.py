@@ -45,7 +45,7 @@ class Player(object):
         """
         for ship in self.ships:
             if ship.occupies(coor):
-                return AttackResult(hit=True, sunk=ship.is_sunk(), ship=ship)
+                return AttackResult(hit=True, sunk=ship.receive_hit(), ship=ship)
         return AttackResult(hit=False, sunk=False, ship=None)
 
     def turn_result(self, move: Coordinate, result: AttackResult):

@@ -71,8 +71,11 @@ class Board(object):
                     up += 1
                 else:
                     go_up = False
-
-        return (up + down + 1 >= ship.size) or (left + right + 1 >= ship.size)
+            if (up + down + 1 >= ship.size) or (left + right + 1 >= ship.size):
+                return True
+            if (not go_up) and (not go_down) and (not go_left) and (not go_right):
+                return False
+        return False
 
     def _init_cell_grid(self) -> list[list[CellState]]:
         """

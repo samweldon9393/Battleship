@@ -13,8 +13,10 @@ import argparse
 def single_player():
     name            = input("Enter your name: ")
     difficulty      = _prompt_difficulty()
+
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
+
     displayer       = Displayer(
         opp_board       = computer.guess_board,
         player_board    = human.guess_board,
@@ -27,6 +29,7 @@ def single_player():
 
 def server_mode(port: int):
     name            = input("Enter your name: ")
+
     server_player   = HumanPlayer(name=name)
     client_player   = ClientPlayer(port=port)
 
@@ -59,6 +62,7 @@ def simulation_mode(diffs: str, display: bool):
     except IndexError:
         print("Usage: Battleship.py -m XX (where x is in [E|M|H])")
         exit(1)
+
     p1 = ComputerPlayer(p1_diff)
     p2 = ComputerPlayer(p2_diff)
 

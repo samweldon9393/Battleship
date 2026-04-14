@@ -36,7 +36,7 @@ class Ship(object):
     def occupies(self, coor: Coordinate) -> bool:
         return coor in self.occupied
 
-    def is_sunk(self) -> bool:
+    def receive_hit(self) -> bool:
         self.hits += 1
         if self.hits == self.size:
             self.sunk = True
