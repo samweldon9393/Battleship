@@ -95,6 +95,8 @@ class ComputerPlayer(Player):
         self._turn_result_med(move, result)
 
     def _update_prob_map(self, cell: Coordinate):
+        if not cell.is_valid():
+            return
         ships = [
                 AircraftCarrier(),
                 Battleship(),
@@ -105,13 +107,9 @@ class ComputerPlayer(Player):
                 Submarine(1)
                 ]
         for ship in ships:
-            try:
-                if (ship in self.sunk_ships 
+            if (ship in self.sunk_ships 
                     or not self.guess_board.ship_can_occupy(ship, cell)):
-                    ships.remove(ship)
-            # Skip any ships that go out of bounds
-            except IndexError:
-                continue
+                ships.remove(ship)
         self.prob_map[cell] = len(ships)
 
     def _easy_guess(self) -> Coordinate:
@@ -131,6 +129,14 @@ class ComputerPlayer(Player):
             max_cells = [k for k, v in self.prob_map.items() if v == max_prob]
             cell = random.choice(max_cells)
             while cell not in self.unguessed:
+                # If there's no intersection between max_cells and unguessed
+                if len(set(max_cells) & self.unguessed._set) == 0:
+                    # Go down to the next highest probability-density
+                    max_prob -= 1
+                    if max_prob == 0:
+                        # Until we get to 0, then just default to random
+                        return self.unguessed.random()
+                    max_cells = [k for k, v in self.prob_map.items() if v == max_prob]
                 cell = random.choice(max_cells)
             return cell
         else:

@@ -3,8 +3,8 @@ from dataclasses import dataclass
 import random
 
 BOARD_SIZE    = 10
-MAX_SHIP_SIZE = 5
 TOTAL_SHIPS   = 7
+MAX_SHIP_SIZE = 5
 
 #=============================================================================#
 #                               Game Utilities                                #

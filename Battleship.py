@@ -11,8 +11,8 @@ from util import send_msg, Difficulty
 import argparse
 
 def single_player():
-    difficulty      = _prompt_difficulty()
     name            = input("Enter your name: ")
+    difficulty      = _prompt_difficulty()
     human           = HumanPlayer(name=name)
     computer        = ComputerPlayer(difficulty)
     displayer       = Displayer(

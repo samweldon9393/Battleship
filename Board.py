@@ -43,38 +43,34 @@ class Board(object):
         up, down, left, right = 0, 0, 0, 0
         go_up, go_down, go_left, go_right = True, True, True, True
         for i in range(ship.size - 1):
-            try:
-                state = self.get_cell(Coordinate(row=coor.row+i, col=coor.col))
+            c = Coordinate(row=coor.row+i, col=coor.col)
+            if c.is_valid():
+                state = self.get_cell(c)
                 if go_right and (state == CellState.UNKNOWN or state == CellState.HIT):
                     right += 1
                 else:
                     go_right = False
-            except IndexError:
-                pass
-            try:
-                state = self.get_cell(Coordinate(row=coor.row-i, col=coor.col))
+            c = Coordinate(row=coor.row-i, col=coor.col)
+            if c.is_valid():
+                state = self.get_cell(c)
                 if go_left and (state == CellState.UNKNOWN or state == CellState.HIT):
                     left += 1
                 else:
                     go_left = False
-            except IndexError:
-                pass
-            try:
-                state = self.get_cell(Coordinate(row=coor.row, col=coor.col+1))
+            c = Coordinate(row=coor.row, col=coor.col+1)
+            if c.is_valid():
+                state = self.get_cell(c)
                 if go_down and (state == CellState.UNKNOWN or state == CellState.HIT):
                     down += 1
                 else:
                     go_down = False
-            except IndexError:
-                pass
-            try:
-                state = self.get_cell(Coordinate(row=coor.row, col=coor.col-1))
+            c = Coordinate(row=coor.row, col=coor.col-1)
+            if c.is_valid():
+                state = self.get_cell(c)
                 if go_up and (state == CellState.UNKNOWN or state == CellState.HIT):
                     up += 1
                 else:
                     go_up = False
-            except IndexError:
-                pass
 
         return (up + down + 1 >= ship.size) or (left + right + 1 >= ship.size)
 

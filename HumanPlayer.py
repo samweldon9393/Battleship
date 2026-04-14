@@ -21,8 +21,12 @@ class HumanPlayer(Player):
                 x = x.upper()
                 y = int(y)
                 coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
+                if not coor.is_valid():
+                    raise IndexError(f"Invalid Coordinate: {coor}")
+            # Bad dict key or invalid coordinate both trap into here
             except IndexError as e:
                 print(f"Invalid entry: {e}")
+            # Other exceptions like int() trap here
             except Exception as e:
                 print(f"Move must be in the form [x y] (no brackets) {e}")
                 continue
