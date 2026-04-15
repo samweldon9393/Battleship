@@ -55,8 +55,6 @@ class Ship(object):
 
 
 class AircraftCarrier(Ship):
-    # Temporary ships can have default sid=0, persistent ships need a unique
-    # id for hashing
     def __init__(self, sid: int = 0):
         super().__init__(sid, "Aircraft Carrier", 5)
 

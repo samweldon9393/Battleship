@@ -31,14 +31,6 @@ class Player(object):
         self.ships.append(self._place_ship(Submarine()))
         self.ships.append(self._place_ship(Submarine(1)))
 
-    @abstractmethod
-    def take_turn(self) -> Coordinate:
-        """
-        Make a guess.
-        Basic game loop is p1.take_turn -> p2.take_hit -> p1.turn_result
-        """
-        pass
-
     def take_hit(self, coor: Coordinate) -> AttackResult:
         """
         Receive opponent's move. Return the results of the move.
@@ -61,6 +53,14 @@ class Player(object):
 
     def register_displayer(self, displayer: Displayer):
         self.displayer = displayer
+
+    @abstractmethod
+    def take_turn(self) -> Coordinate:
+        """
+        Make a guess.
+        Basic game loop is p1.take_turn -> p2.take_hit -> p1.turn_result
+        """
+        pass
 
     @abstractmethod
     def output(self, msg: str):

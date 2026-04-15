@@ -1,7 +1,7 @@
 from Displayer import Displayer
 from Player import Player
 from Ship import AttackResult, AircraftCarrier, Battleship, Cruiser, Destroyer, Submarine, Ship
-from util import BOARD_SIZE, CellState, Coordinate, Difficulty, MAX_SHIP_SIZE, Modes, Orientation, Unguessed
+from util import BOARD_SIZE, CellState, Coordinate, Difficulty, MAX_SHIP_SIZE, Modes, Orientation, Unguessed, TOTAL_SHIPS
 
 import random
 
@@ -19,9 +19,13 @@ class ComputerPlayer(Player):
     def __init__(self, difficulty: Difficulty, name: str = "Hal"):
         super().__init__(name=name)
         self.difficulty = difficulty
+
+        # Medium Difficulty additions
         self.mode       = Modes.HUNT
         self.targets    = list()
         self.hit_ships  = set() # We might hit a second ship while in TARGET mode
+
+        # Hard Difficulty additions
         self.sunk_ships = set() # Keep track for prob_map
         self.prob_map   = self._init_prob_map()
 
@@ -134,7 +138,7 @@ class ComputerPlayer(Player):
                     # Go down to the next highest probability-density
                     max_prob -= 1
                     if max_prob == 0:
-                        # Until we get to 0, then just default to random
+                        # This should be unreachable
                         return self.unguessed.random()
                     max_cells = [k for k, v in self.prob_map.items() if v == max_prob]
                 cell = random.choice(max_cells)
@@ -150,11 +154,13 @@ class ComputerPlayer(Player):
         if self.difficulty != Difficulty.HARD:
             return None
         prob_map = dict()
-        coords = [Coordinate(x, y)
-               for x in range(BOARD_SIZE)
-               for y in range(BOARD_SIZE)]
+        coords = [
+                Coordinate(x, y)
+                for x in range(BOARD_SIZE)
+                for y in range(BOARD_SIZE)
+                ]
         for c in coords:
-            prob_map[c] = MAX_SHIP_SIZE
+            prob_map[c] = TOTAL_SHIPS
         return prob_map
 
     def _place_ship(self, ship: Ship) -> Ship:

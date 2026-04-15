@@ -23,12 +23,12 @@ class HumanPlayer(Player):
                 coor = Coordinate(row=Coordinate.rows[x], col=int(y)-1)
                 if not coor.is_valid():
                     raise IndexError(f"Invalid Coordinate: {coor}")
-            # Bad dict key or invalid coordinate both trap into here
+            # Bad dict key or invalid coordinate both go into here
             except IndexError as e:
                 print(f"Invalid entry: {e}")
-            # Other exceptions like int() trap here
+            # Other exceptions like int() go here
             except Exception as e:
-                print(f"Move must be in the form [x y] (no brackets) {e}")
+                print(f"Move must be in the form [x y] (no brackets): {e}")
                 continue
             if coor in self.unguessed:
                 self.unguessed.remove(coor)
@@ -57,7 +57,7 @@ class HumanPlayer(Player):
                     print(f"Coordinate must be [A <= row <= J, 1 <= col <= 10]")
                     continue
             except Exception as e:
-                print(f"Move must be in the form [x y o] (no brackets) {e}")
+                print(f"Move must be in the form [x y o] (no brackets): {e}")
                 continue
             orient = -1
             if o == "v":
